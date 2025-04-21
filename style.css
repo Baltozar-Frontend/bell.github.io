@@ -10,3 +10,19 @@
   .image-container{
     border-radius: 30px;
   }
+
+  body{
+    background-color: gold;
+  }
+
+  header h1 {
+    text-align: center;
+    color: darkblue;
+  }
+
+  .Input-header{
+    border-radius: 10px;
+    border: none;
+    color: rgb(6, 65, 57);
+    background-image: linear-gradient(to right, skyblue, red);
+  }

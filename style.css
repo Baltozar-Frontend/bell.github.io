@@ -1,11 +1,12 @@
-body{
-    background-image: url(th-2738345891);
+#container {
     display: flex;
+    align-items: center;
     justify-content: center;
-}
+  }
+  #clickCount {
+    margin-left: 10px;
+  }
 
-h1{
-    color: yellow;
-    font-weight: 30;
-    font-size: 100px;
-}
+  .image-container{
+    border-radius: 30px;
+  }

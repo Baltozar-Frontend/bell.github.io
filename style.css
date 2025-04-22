@@ -11,8 +11,14 @@
     border-radius: 30px;
   }
 
+  .image-container:hover {
+    box-shadow:
+  3px 3px red,
+  -1em 0 0.4em olive;
+  }
+
   body{
-    background-color: gold;
+    background-color: rgb(169, 209, 150);
   }
 
   header h1 {
@@ -25,4 +31,17 @@
     border: none;
     color: rgb(6, 65, 57);
     background-image: linear-gradient(to right, skyblue, red);
+  }
+
+  .corona {
+    width: 30px;
+  }
+
+  .leaderbord {
+    display: flex;
+    align-items: center;
+  }
+  
+  .people-leaderbord {
+    margin-left: 30px;
   }

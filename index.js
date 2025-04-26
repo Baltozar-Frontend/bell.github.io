@@ -25,6 +25,11 @@ image.addEventListener('click', () => {
 
 // --- ИМЯ ПОЛЬЗОВАТЕЛЯ ---
 // ... (код для имени пользователя без изменений)
+const userNameInput = document.getElementById('userName');
+userNameInput.value = localStorage.getItem('userName') || '';
+userNameInput.addEventListener('input', () => {
+    localStorage.setItem('userName', userNameInput.value);
+});
 
 
 increaseClick.addEventListener('click', () => {

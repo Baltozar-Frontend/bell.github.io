@@ -11,12 +11,7 @@
     border-radius: 30px;
   }
 
-  .image-container:hover {
-    box-shadow:
-  3px 3px red,
-  -1em 0 0.4em olive;
-  }
-
+  
   body{
     background-color: rgb(169, 209, 150);
   }
@@ -45,3 +40,13 @@
   .people-leaderbord {
     margin-left: 30px;
   }
+
+  .button-price {
+    border: none;
+    border-radius: 30px;
+    margin-left: 15px;
+    background-color: rgb(212, 110, 110);
+    box-shadow: 0 6px #4fa283;
+  }
+
+  

@@ -1,39 +1,48 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>Кликер мамац софия</title>
-<meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=none">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
+  <head>
+    <title>Кликер мамац софия</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
     <header>
-        <h1>Хай, это кликер с мамац софией</h1>
-        <input class="Input-header" id="userName" type="text" placeholder="Твое имя">
-        <h2>Топ лидеров по кликам:</h2>
-        <div class="leaderbord">
-            <img class="corona" src="corona.png" alt="">
-            <span>ПЫЛЬНЫЕ БОМЖИ</span>
-        </div>
-        <span class="people-leaderbord">2Дилдабек</span>
-         <br>
-        
-        <span class="people-leaderbord">3Артом</span>
-        <br>
-        <span class="people-leaderbord">4Яромир</span>
-        <br>
-        <span class="people-leaderbord">5Крут 228(бывший топ 1)</span>
+      <h1>Хай, это кликер с мамац софией</h1>
+      <input
+        class="Input-header"
+        id="userName"
+        type="text"
+        placeholder="Твое имя"
+      />
+      <h2>Топ лидеров по кликам:</h2>
     </header>
 
-<div id="container">
-  <img class="image-container" src="clTDhXv8d3k.jpg" alt="Clickable Image" id="clickableImage">
-  <h2 id="clickCount">Кликов: 0</h2>
-</div>
+    <div class="container-leaderbord">
+      <div class="leaderbord">
+        <img id="corona" class="corona" src="corona.png" alt="" />
+        <span>ПЫЛЬНЫЕ БОМЖИ</span>
+      </div>
+      <span class="people-leaderbord">2Дилдабек</span>
+      <br />
+      <span class="people-leaderbord">3Артом</span>
+      <br />
+      <span class="people-leaderbord">4Яромир</span>
+      <br />
+      <span class="people-leaderbord">5Крут 228(бывший топ 1)</span>
+    </div>
 
+    <div id="container">
+      <img
+        class="image-container"
+        src="clTDhXv8d3k.jpg"
+        alt="Clickable Image"
+        id="clickableImage"
+      />
+      <h2 id="clickCount">Кликов: 0</h2>
+      <button class="button-price" id="plus1Click"><p id="priceDisplay">100</p></button>
+    </div>
 
-
-<script src="index.js"></script>
-
-</body>
+    <script src="index.js"></script>
+  </body>
 </html>

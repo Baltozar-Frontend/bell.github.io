@@ -1,23 +1,49 @@
-// --- КЛИКИ ---
-let clicks = localStorage.getItem('clicks') || 0;
-clicks = parseInt(clicks);
+let clicks = parseInt(localStorage.getItem('clicks')) || 0;
+let clickIncrement = parseInt(localStorage.getItem('clickIncrement')) || 1;
+let priceForUpgrade = parseInt(localStorage.getItem('priceForUpgrade')) || 100; // Цена улучшения
 const image = document.getElementById('clickableImage');
 const clickCount = document.getElementById('clickCount');
+const increaseClick = document.getElementById('plus1Click');
+const priceDisplay = document.getElementById('priceDisplay'); // Добавляем элемент для отображения цены
+
+
+// Отображаем начальную цену
+if (priceDisplay) { // Проверяем, существует ли элемент
+  priceDisplay.textContent = `Цена улучшения: ${priceForUpgrade}`;
+}
+
+
+
 clickCount.textContent = `Кликов: ${clicks}`;
 
 image.addEventListener('click', () => {
-  clicks++;
-  clickCount.textContent = `Кликов: ${clicks}`;
-  localStorage.setItem('clicks', clicks);
+    clicks += clickIncrement;
+    clickCount.textContent = `Кликов: ${clicks}`;
+    localStorage.setItem('clicks', clicks);
 });
+
 
 // --- ИМЯ ПОЛЬЗОВАТЕЛЯ ---
-const userNameInput = document.getElementById('userName');
+// ... (код для имени пользователя без изменений)
 
-// Загружаем имя пользователя из localStorage
-userNameInput.value = localStorage.getItem('userName') || '';
 
-// Сохраняем имя пользователя при изменении input
-userNameInput.addEventListener('input', () => {
-  localStorage.setItem('userName', userNameInput.value);
+increaseClick.addEventListener('click', () => {
+    if (clicks >= priceForUpgrade) {
+        clicks -= priceForUpgrade;
+        clickIncrement++;
+        priceForUpgrade += 100; // Увеличиваем цену улучшения
+        localStorage.setItem('priceForUpgrade', priceForUpgrade); // Сохраняем новую цену
+        localStorage.setItem('clickIncrement', clickIncrement);
+        localStorage.setItem('clicks', clicks);
+        clickCount.textContent = `Кликов: ${clicks}`;
+
+        if (priceDisplay) { // Обновляем отображение цены, если элемент существует
+          priceDisplay.textContent = `Цена улучшения: ${priceForUpgrade}`;
+        }
+
+
+    } else {
+        alert(`У тебя недостаточно очков! Нужно ${priceForUpgrade} кликов.`);
+    }
 });
+

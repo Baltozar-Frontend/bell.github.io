@@ -3,9 +3,20 @@
     align-items: center;
     justify-content: center;
   }
+
+  @media all and (max-width: 400px) {
+    #container {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+
   #clickCount {
     margin-left: 10px;
   }
+
+
 
   .image-container{
     border-radius: 30px;
@@ -49,4 +60,6 @@
     box-shadow: 0 6px #4fa283;
   }
 
-  
+  @media screen  {
+    
+  }

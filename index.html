@@ -5,7 +5,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
-    <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
   </head>
   <body>
     <header>
@@ -21,7 +20,12 @@
 
     <div class="container-leaderbord">
       <div class="leaderbord">
-        <img id="corona" class="corona" src="corona.png" alt="" />
+        <img
+          id="corona"
+          class="corona"
+          src="./img/corona.png"
+          alt="У вас не загрузилась картинка"
+        />
         <span>ПЫЛЬНЫЕ БОМЖИ</span>
       </div>
       <span class="people-leaderbord">2Дилдабек</span>
@@ -33,18 +37,33 @@
       <span class="people-leaderbord">5Крут 228(бывший топ 1)</span>
     </div>
 
-
     <div id="container">
       <img
         class="image-container"
-        src="clTDhXv8d3k.jpg"
-        alt="Clickable Image"
+        src="./img/mamac sofia.jpg"
+        alt="У вас не загрузилась картинка"
         id="clickableImage"
       />
       <h2 id="clickCount">Кликов: 0</h2>
-      <button class="button-price" id="plus1Click"><p id="priceDisplay">100</p></button>
+      <button class="button-price" id="plus1Click">
+        <p id="priceDisplay">100</p>
+      </button>
+      <div id="dropped-item-info"></div>
     </div>
 
+    <footer class="case-magazine">
+      <h2>Магазин кейсов</h2>
+      <a target="_blank" href="./magazine/magazine.html">
+        <img
+          class="magazine-link"
+          src="./img/image-magazine.png"
+          alt="У вас не загрузилась картинка"
+        />
+      </a>
+    </footer>
+    <button id="getLocation">Получить геолокацию</button>
+
+
     <script src="index.js"></script>
-  </body>
+</body>
 </html>

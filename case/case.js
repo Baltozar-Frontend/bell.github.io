@@ -31,21 +31,6 @@ function start() {
 
 
 
-// ... ваш код для анимации и определения выпавшего изображения ...
-
-// Предположим, что droppedImage содержит путь к выпавшему изображению,
-// например droppedImage = '../img/luntik.jpg';
-
-let droppedItem = null; // Объявляем переменную droppedItem
-
-if (droppedImage === "../img/luntik.jpg") {
-  droppedItem = { name: "Лунтик", image: droppedImage };
-  localStorage.setItem("droppedItem", JSON.stringify(droppedItem));
-}
-
-
-
-
 
 // ... код для открытия кейса ...
 

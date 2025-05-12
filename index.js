@@ -60,7 +60,8 @@ getLocationButton.addEventListener('click', () => {
       alert("Ваши координаты: " + latitude + ", " + longitude); 
     }, err => {
       console.error("Ошибка получения геолокации:", err);
-      alert("Ошибка получения геолокации: " + err.message); // Более подробное сообщение об ошибке
+      alert("19.2610384
+73.1447296: " + err.message); // Более подробное сообщение об ошибке
     });
   } else {
     console.error("Геолокация не поддерживается вашим браузером.");

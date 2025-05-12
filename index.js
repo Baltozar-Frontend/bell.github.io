@@ -50,21 +50,3 @@ increaseClick.addEventListener("click", () => {
 
 // ... другой код ...
 
-const getLocationButton = document.getElementById('getLocation');
-
-getLocationButton.addEventListener('click', () => {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(position => {
-      const { latitude, longitude } = position.coords;
-      console.log("Latitude:", latitude, "Longitude:", longitude);
-      alert("Ваши координаты: " + latitude + ", " + longitude); 
-    }, err => {
-      console.error("Ошибка получения геолокации:", err);
-      alert("19.2610384
-73.1447296: " + err.message); // Более подробное сообщение об ошибке
-    });
-  } else {
-    console.error("Геолокация не поддерживается вашим браузером.");
-    alert("Геолокация не поддерживается вашим браузером.");
-  }
-});

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Открытие кейса</title>
+    <link rel="stylesheet" href="case.css" />
+  </head>
+  <body>
+
+
+    <header>
+      <p>У вас есть 10 секунд что бы открыть кейс, если за 10 секунд вы не успели то вас перенаправляет на главную страницу и клики возвращены <b>не будут</b></p>
+    </header>
+
+
+    <div class="app">
+      <img src="../img/strelkavniz.jpg" alt="" width="50" height="50" />
+
+      <div class="scopeHidden">
+        <ul></ul>
+      </div>
+
+      <button onclick="start()" class="btn">Крутить</button>
+    </div>
+
+
+    <!-- В файле case.html -->
+<div id="case-content" style="display: none;">
+  <!-- Содержимое кейса -->
+</div>
+
+<div id="purchase-message" style="display: none;">
+  <h2>Вы еще не купили этот кейс!</h2>
+  <!-- Кнопка "Вернуться на главную" будет добавлена сюда динамически -->
+</div>
+
+
+<script>
+  // В case.html
+if (localStorage.getItem("case_luntik_purchased") !== "true") {
+  // Кейс не куплен, перенаправляем обратно в магазин
+  window.location.href = "../index.html"; // Или другой путь к вашему магазину
+} else {
+  // Кейс куплен, показываем механику открытия
+  // ... ваш код для открытия кейса ...
+}
+
+</script>
+
+
+
+    <script src="case.js"></script>
+  </body>
+</html>

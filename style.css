@@ -60,6 +60,8 @@
     box-shadow: 0 6px #4fa283;
   }
 
-  @media screen  {
-    
+  .magazine-link {
+    border: 3px solid #d17d00;
+    border-radius: 50%;
+    padding: 3px;
   }

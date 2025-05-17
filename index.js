@@ -67,7 +67,7 @@ function initClicker() {
   if (elements.logoutBtn) {
     elements.logoutBtn.addEventListener("click", function() {
       localStorage.removeItem('isLoggedIn');
-      window.location.href = "..";
+      window.location.href = "../clicker/sign in/sign-in.html";
     });
   }
 

@@ -116,7 +116,7 @@ function initClicker() {
   if (logoutBtn) {
       logoutBtn.addEventListener("click", function() {
           localStorage.removeItem('isLoggedIn');
-          window.location.href = "login.html";
+          window.location.href = "../sign in/sign-in.html";
       });
   }
 }

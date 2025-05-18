@@ -74,6 +74,12 @@ function initClicker() {
   updateUI();
 }
 
+
+// Проверяем, есть ли сохранённый инвентарь, если нет - инициализируем пустым
+if (!localStorage.getItem('inventory')) {
+  localStorage.setItem('inventory', JSON.stringify([]));
+}
+
 // Проверка авторизации и запуск игры
 document.addEventListener('DOMContentLoaded', function() {
   const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
@@ -84,4 +90,37 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   initClicker();
+});
+
+ // Обработчик клика по иконке
+ document.getElementById('inventory-icon').addEventListener('click', function() {
+  const panel = document.getElementById('inventory-panel');
+  panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+});
+
+// Функция обновления инвентаря
+function updateInventory() {
+  const items = JSON.parse(localStorage.getItem('inventory')) || [];
+  const container = document.getElementById('inventory-items');
+  
+  if (items.length === 0) {
+    container.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">Инвентарь пуст</p>';
+  } else {
+    container.innerHTML = items.map(item => `
+      <div style="text-align: center;">
+        <img src="${item.image}" width="70" height="70" style="border-radius: 5px;">
+        <div style="font-size: 12px;">${item.name}</div>
+      </div>
+    `).join('');
+  }
+}
+
+// Инициализация при загрузке
+document.addEventListener('DOMContentLoaded', function() {
+  // Гарантируем, что инвентарь пуст при первом запуске
+  if (!localStorage.getItem('inventory_initialized')) {
+    localStorage.setItem('inventory', JSON.stringify([]));
+    localStorage.setItem('inventory_initialized', 'true');
+  }
+  updateInventory();
 });

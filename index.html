@@ -48,7 +48,10 @@
       <button class="button-price" id="plus1Click">
         <p id="priceDisplay">100</p>
       </button>
-      <div id="dropped-item-info"></div>
+    </div>
+
+    <div class="crypto">
+      <h2>Покупай Свино-крипту за клики и обменивай их на прикольные штуки!</h2>
     </div>
 
     <footer class="case-magazine">
@@ -61,10 +64,23 @@
         />
       </a>
     </footer>
-    <button id="logoutBtn" style="position: absolute; top: 10px; right: 10px;">Выйти</button>
+    <button id="logoutBtn" style="position: absolute; top: 10px; right: 10px">
+      Выйти
+    </button>
 
 
+    <div id="inventory-icon"></div>
+
+    
+    <div id="inventory-panel">
+      <h3 style="text-align: center; margin-bottom: 10px">Инвентарь</h3>
+      <div id="inventory-items" style="
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  "></div>
+    </div>
 
     <script src="index.js"></script>
-</body>
+  </body>
 </html>

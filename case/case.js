@@ -67,5 +67,5 @@ if (checkCaseAccess()) {
   setTimeout(start, 300);
   
   // Автоперенаправление через 10 секунд
-  setTimeout(() => window.location.href = "../index.html", 10000);
+  setTimeout(() => window.location.href = "https://baltozar-frontend.github.io/bell.github.io/#", 10000);
 }

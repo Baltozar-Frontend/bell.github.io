@@ -3,156 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PIG Exchange v2.0 | Свино-Терминал</title>
+    <title>PIG Terminal Extreme | Свино-Хакер</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg: #0b0e11;
-            --card: #181a20;
-            --primary: #f1c40f;
-            --up: #02c076;
-            --down: #f84960;
-            --text: #eaeaea;
-            --text-dim: #848e9c;
+            --bg: #050508;
+            --card: #11111a;
+            --accent: #f1c40f;
+            --green: #00ff88;
+            --red: #ff3e3e;
+            --text: #ffffff;
+            --glass: rgba(255, 255, 255, 0.03);
         }
 
         body { 
-            background-color: var(--bg); 
-            color: var(--text); 
-            font-family: 'BinancePlex', 'Segoe UI', sans-serif; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            margin: 0;
-            padding: 20px;
+            background: var(--bg); color: var(--text); 
+            font-family: 'Segoe UI', system-ui, sans-serif; 
+            display: flex; flex-direction: column; align-items: center; 
+            margin: 0; padding: 20px; min-height: 100vh;
         }
 
-        .terminal-container { 
-            background: var(--card); 
-            padding: 20px; 
-            border-radius: 16px; 
-            border: 1px solid #2b2f36; 
-            width: 100%; 
-            max-width: 480px; 
-            box-shadow: 0 16px 40px rgba(0,0,0,0.6); 
+        .app-container { 
+            width: 100%; max-width: 450px; 
+            background: var(--card); border: 1px solid #222;
+            border-radius: 24px; padding: 25px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+            position: relative; overflow: hidden;
         }
 
-        /* Шапка с монеткой */
-        .coin-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+        /* Эффект свечения для чита */
+        .app-container.hacked {
+            border-color: var(--accent);
+            box-shadow: 0 0 50px rgba(241, 196, 15, 0.2);
+        }
+
+        /* Шапка */
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .coin-box { display: flex; align-items: center; gap: 12px; }
         .coin-img { 
-            width: 50px; height: 50px; border-radius: 50%; 
-            border: 2px solid var(--primary); 
-            box-shadow: 0 0 15px rgba(241, 196, 15, 0.3);
+            width: 60px; height: 60px; border-radius: 50%; 
+            border: 2px solid var(--accent); cursor: pointer;
+            transition: all 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 15px rgba(241, 196, 15, 0.2);
         }
-        .coin-title h2 { margin: 0; font-size: 1.2rem; }
-        .coin-title span { font-size: 0.8rem; color: var(--text-dim); }
+        .coin-img:active { transform: scale(0.9); }
 
-        /* Цена */
-        .price-section { text-align: center; margin-bottom: 20px; border-bottom: 1px solid #2b2f36; padding-bottom: 20px; }
-        .market-price { font-size: 42px; font-weight: 800; margin: 5px 0; transition: color 0.3s; }
-        .price-change { font-size: 0.9rem; font-weight: bold; }
+        /* Цена и Тренд */
+        .market-info { text-align: right; }
+        #price { font-size: 32px; font-weight: 900; margin: 0; tabular-nums; transition: 0.3s; }
+        #trend-label { font-size: 12px; font-weight: bold; text-transform: uppercase; opacity: 0.8; }
 
-        /* Статистика */
-        .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-        .stat-card { background: #2b2f36; padding: 12px; border-radius: 10px; }
-        .stat-card span { display: block; font-size: 10px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 4px; }
-        .stat-card strong { font-size: 1.1rem; color: var(--primary); }
-
-        /* Кнопки действий */
-        .trade-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .btn-group { display: flex; flex-direction: column; gap: 5px; }
-        
-        button { 
-            border: none; padding: 12px; font-size: 14px; font-weight: bold; 
-            border-radius: 6px; cursor: pointer; transition: 0.2s; 
+        /* Кошелек */
+        .wallet { 
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; 
+            margin-bottom: 20px; background: var(--glass); padding: 15px; border-radius: 15px;
         }
-        
-        .btn-buy { background: var(--up); color: white; }
-        .btn-buy:hover { filter: brightness(1.1); }
-        .btn-sell { background: var(--down); color: white; }
-        .btn-sell:hover { filter: brightness(1.1); }
-        
-        .btn-max { 
-            background: #474d57; color: white; font-size: 10px; padding: 4px; 
-            border-radius: 4px; opacity: 0.8;
+        .wallet-item span { display: block; font-size: 11px; color: #888; text-transform: uppercase; margin-bottom: 5px; }
+        .wallet-item strong { font-size: 18px; color: var(--accent); }
+
+        /* Кнопки */
+        .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .btn { 
+            border: none; padding: 18px; border-radius: 12px; font-weight: 900; 
+            cursor: pointer; transition: 0.2s; text-transform: uppercase; letter-spacing: 1px;
         }
-        .btn-max:hover { opacity: 1; }
-        
-        button:disabled { background: #2b2f36; color: #5e6673; cursor: not-allowed; }
+        .buy { background: var(--green); color: #050508; }
+        .sell { background: var(--red); color: #fff; }
+        .btn:hover { transform: translateY(-3px); opacity: 0.9; }
+        .btn:active { transform: translateY(0); }
 
         /* График */
-        #chart-container { margin-top: 20px; height: 180px; position: relative; }
-        
-        .history-log {
-            margin-top: 20px; background: rgba(0,0,0,0.2); 
-            border-radius: 8px; padding: 10px; height: 80px; overflow-y: auto; font-size: 12px;
-        }
-        .log-entry { display: flex; justify-content: space-between; margin-bottom: 4px; border-bottom: 1px solid #2b2f36; padding-bottom: 2px; }
+        .chart-box { height: 200px; margin-top: 25px; border-radius: 15px; overflow: hidden; background: rgba(0,0,0,0.2); }
 
-        .back-link { margin-top: 20px; color: var(--text-dim); text-decoration: none; font-size: 13px; transition: 0.3s; }
-        .back-link:hover { color: var(--primary); }
+        /* Лог событий */
+        .logs { 
+            margin-top: 20px; font-size: 11px; height: 60px; overflow-y: auto; 
+            color: #555; border-top: 1px solid #222; padding-top: 10px;
+        }
+        .log-line { display: flex; justify-content: space-between; margin-bottom: 4px; }
+
+        .footer { margin-top: 25px; font-size: 12px; color: #444; text-decoration: none; }
+        
+        /* Анимация текста при чите */
+        @keyframes hackPulse {
+            0% { color: var(--accent); transform: scale(1); }
+            50% { color: #fff; transform: scale(1.1); }
+            100% { color: var(--accent); transform: scale(1); }
+        }
+        .hack-active { animation: hackPulse 0.5s infinite; }
     </style>
 </head>
 <body>
 
-    <div class="terminal-container">
-        <div class="coin-header">
-            <img src="img.webp" alt="PIG" class="coin-img">
-            <div class="coin-title">
-                <h2>PIG / CLICKS</h2>
-                <span>Spot Trading (Piggy Bank)</span>
+    <div class="app-container" id="terminal">
+        <div class="header">
+            <div class="coin-box">
+                <img src="img.webp" alt="PIG" class="coin-img" id="secret-trigger" title="Кликни 10 раз!">
+                <div>
+                    <div style="font-weight: 800; font-size: 14px;">PIG COIN</div>
+                    <div style="font-size: 10px; color: #666;">SWINE EXCHANGE</div>
+                </div>
+            </div>
+            <div class="market-info">
+                <div id="trend-label">Market Neutral</div>
+                <div id="price">5000</div>
             </div>
         </div>
 
-        <div class="price-section">
-            <div id="market-price" class="market-price">5000</div>
-            <div id="price-change" class="price-change">0.00% (24h)</div>
-        </div>
-
-        <div class="stats-row">
-            <div class="stat-card">
-                <span>Доступно Кликов</span>
-                <strong id="user-clicks">0</strong>
+        <div class="wallet">
+            <div class="wallet-item">
+                <span>Ваши Клики</span>
+                <strong id="display-clicks">0</strong>
             </div>
-            <div class="stat-card">
+            <div class="wallet-item">
                 <span>Баланс PIG</span>
-                <strong id="user-coins">0</strong>
+                <strong id="display-coins">0</strong>
             </div>
         </div>
 
-        <div class="trade-grid">
-            <div class="btn-group">
-                <button class="btn-buy" onclick="buyCoin(1)">КУПИТЬ 1</button>
-                <button class="btn-max" onclick="buyMax()">КУПИТЬ MAX</button>
-            </div>
-            <div class="btn-group">
-                <button class="btn-sell" onclick="sellCoin(1)">ПРОДАТЬ 1</button>
-                <button class="btn-max" onclick="sellMax()">ПРОДАТЬ MAX</button>
-            </div>
+        <div class="actions">
+            <button class="btn buy" onclick="trade('buy')">Купить</button>
+            <button class="btn sell" onclick="trade('sell')">Продать</button>
         </div>
 
-        <div id="chart-container">
-            <canvas id="liveChart"></canvas>
+        <div class="chart-box">
+            <canvas id="mainChart"></canvas>
         </div>
 
-        <div class="history-log" id="trade-log">
-            <div style="color: #5e6673; text-align: center;">История сделок пуста</div>
+        <div class="logs" id="history">
+            <div class="log-line"><span>System:</span> <span>Terminal Ready...</span></div>
         </div>
     </div>
 
-    <a href="index.html" class="back-link">← Вернуться к кликеру</a>
+    <a href="index.html" class="footer">← ВЕРНУТЬСЯ В ГЛАВНОЕ МЕНЮ</a>
 
     <script>
-        // Данные
+        // --- ДАННЫЕ ---
         let clicks = parseInt(localStorage.getItem('clicks')) || 0;
         let coins = parseInt(localStorage.getItem('pigCoins')) || 0;
-        let startPrice = 5000;
         
-        const priceEl = document.getElementById('market-price');
-        const changeEl = document.getElementById('price-change');
-        const clicksEl = document.getElementById('user-clicks');
-        const coinsEl = document.getElementById('user-coins');
-        const logEl = document.getElementById('trade-log');
+        const priceEl = document.getElementById('price');
+        const trendEl = document.getElementById('trend-label');
+        const clicksEl = document.getElementById('display-clicks');
+        const coinsEl = document.getElementById('display-coins');
+        const historyEl = document.getElementById('history');
 
         function updateUI() {
             clicksEl.innerText = clicks.toLocaleString();
@@ -162,117 +156,113 @@
         }
         updateUI();
 
-        // Настройка Chart.js
-        const ctx = document.getElementById('liveChart').getContext('2d');
-        const liveChart = new Chart(ctx, {
+        // --- ЧИТ-КОД (10 КЛИКОВ) ---
+        let secretClicks = 0;
+        let lastClick = 0;
+        document.getElementById('secret-trigger').addEventListener('click', () => {
+            const now = Date.now();
+            if (now - lastClick > 1500) secretClicks = 0; // Сброс если долго не кликал
+            
+            secretClicks++;
+            lastClick = now;
+
+            if (secretClicks === 10) {
+                clicks += 100000;
+                updateUI();
+                activateHackVisuals();
+                secretClicks = 0;
+            }
+        });
+
+        function activateHackVisuals() {
+            const terminal = document.getElementById('terminal');
+            terminal.classList.add('hacked');
+            priceEl.classList.add('hack-active');
+            addLog("HACK", "+100,000 CLICKS", "#f1c40f");
+            
+            setTimeout(() => {
+                terminal.classList.remove('hacked');
+                priceEl.classList.remove('hack-active');
+            }, 3000);
+        }
+
+        // --- БИРЖА (ГРАФИК) ---
+        const ctx = document.getElementById('mainChart').getContext('2d');
+        const mainChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: Array(30).fill(''),
+                labels: Array(25).fill(''),
                 datasets: [{
-                    data: Array(30).fill(5000),
+                    data: Array(25).fill(5000),
                     borderColor: '#f1c40f',
                     borderWidth: 2,
-                    backgroundColor: 'rgba(241, 196, 15, 0.05)',
                     fill: true,
-                    tension: 0.3,
+                    backgroundColor: 'rgba(241, 196, 15, 0.05)',
+                    tension: 0.4,
                     pointRadius: 0
                 }]
             },
             options: {
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
-                scales: {
-                    x: { display: false },
-                    y: { 
-                        position: 'right',
-                        grid: { color: '#2b2f36' }, 
-                        ticks: { color: '#848e9c', font: { size: 10 } } 
-                    }
-                },
-                animation: { duration: 400 }
+                scales: { x: { display: false }, y: { grid: { color: '#222' }, ticks: { color: '#444', font: { size: 10 } } } }
             }
         });
 
-        // Движок курса
-        let trend = 0; // Настроение рынка
+        // Движок цен
         setInterval(() => {
-            const currentData = liveChart.data.datasets[0].data;
-            let lastPrice = currentData[currentData.length - 1];
+            const data = mainChart.data.datasets[0].data;
+            let lastPrice = data[data.length - 1];
             
-            // Имитация тренда
-            trend += (Math.random() - 0.5) * 0.5;
-            trend = Math.max(-2, Math.min(2, trend));
+            // Логика рынка
+            let move = (Math.random() - 0.5) * 400;
+            let newPrice = Math.floor(lastPrice + move);
 
-            let volatility = Math.floor(Math.random() * 301) - 150; 
-            let newPrice = Math.floor(lastPrice + volatility + (trend * 50));
+            if (newPrice < 1000) newPrice = 1200;
+            if (newPrice > 15000) newPrice = 13000;
 
-            // Лимиты
-            if (newPrice < 1000) newPrice = 1500;
-            if (newPrice > 25000) newPrice = 20000;
-
-            // Обновление графика
-            currentData.push(newPrice);
-            currentData.shift();
+            data.push(newPrice);
+            data.shift();
             
-            // Цвет графика
-            const color = newPrice >= lastPrice ? "#02c076" : "#f84960";
-            liveChart.data.datasets[0].borderColor = color;
-            liveChart.update();
+            const color = newPrice >= lastPrice ? "#00ff88" : "#ff3e3e";
+            mainChart.data.datasets[0].borderColor = color;
+            mainChart.update();
 
-            // Текст цены
             priceEl.innerText = newPrice;
             priceEl.style.color = color;
+            trendEl.innerText = newPrice >= lastPrice ? "Market Bullish" : "Market Bearish";
+            trendEl.style.color = color;
+        }, 1200);
 
-            // Расчет % изменения
-            let diff = (((newPrice - startPrice) / startPrice) * 100).toFixed(2);
-            changeEl.innerText = `${diff > 0 ? '+' : ''}${diff}%`;
-            changeEl.style.color = diff >= 0 ? "#02c076" : "#f84960";
-        }, 1000);
-
-        function addLog(type, amount, price) {
-            if (logEl.innerHTML.includes("История сделок пуста")) logEl.innerHTML = "";
-            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            const entry = document.createElement('div');
-            entry.className = 'log-entry';
-            entry.innerHTML = `
-                <span style="color: ${type === 'BUY' ? '#02c076' : '#f84960'}">${type} ${amount} PIG</span>
-                <span style="color: var(--text-dim)">@ ${price}</span>
-                <span style="font-size: 9px; color: #444">${time}</span>
-            `;
-            logEl.prepend(entry);
-        }
-
-        // Торговля
-        function buyCoin(qty) {
-            const price = parseInt(priceEl.innerText);
-            if (clicks >= price * qty) {
-                clicks -= price * qty;
-                coins += qty;
-                addLog('BUY', qty, price);
-                updateUI();
+        // --- ТОРГОВЛЯ ---
+        function trade(type) {
+            const currentPrice = parseInt(priceEl.innerText);
+            
+            if (type === 'buy') {
+                if (clicks >= currentPrice) {
+                    clicks -= currentPrice;
+                    coins++;
+                    addLog("BUY", `1 PIG @ ${currentPrice}`, "#00ff88");
+                } else {
+                    alert("Недостаточно кликов!");
+                }
             } else {
-                priceEl.style.animation = "shake 0.2s"; // Можно добавить CSS тряску
+                if (coins > 0) {
+                    coins--;
+                    clicks += currentPrice;
+                    addLog("SELL", `1 PIG @ ${currentPrice}`, "#ff3e3e");
+                } else {
+                    alert("Нечего продавать!");
+                }
             }
+            updateUI();
         }
 
-        function buyMax() {
-            const price = parseInt(priceEl.innerText);
-            let qty = Math.floor(clicks / price);
-            if (qty > 0) buyCoin(qty);
-        }
-
-        function sellCoin(qty) {
-            const price = parseInt(priceEl.innerText);
-            if (coins >= qty) {
-                coins -= qty;
-                clicks += price * qty;
-                addLog('SELL', qty, price);
-                updateUI();
-            }
-        }
-
-        function sellMax() {
-            if (coins > 0) sellCoin(coins);
+        function addLog(action, msg, color) {
+            const line = document.createElement('div');
+            line.className = 'log-line';
+            line.innerHTML = `<span style="color:${color}">${action}</span> <span>${msg}</span>`;
+            historyEl.prepend(line);
         }
     </script>
 </body>

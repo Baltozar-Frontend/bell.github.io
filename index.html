@@ -25,64 +25,70 @@
           id="corona"
           class="corona"
           src="./img/corona.png"
-          alt="У вас не загрузилась картинка"
+          alt="Топ 1"
         />
         <span>ПЫЛЬНЫЕ БОМЖИ</span>
       </div>
-      <span class="people-leaderbord">2Дилдабек</span>
+      <span class="people-leaderbord">2. Дилдабек</span>
       <br />
-      <span class="people-leaderbord">3Артом</span>
+      <span class="people-leaderbord">3. Артом</span>
       <br />
-      <span class="people-leaderbord">4Яромир</span>
+      <span class="people-leaderbord">4. Яромир</span>
       <br />
-      <span class="people-leaderbord">5Крут 228(бывший топ 1)</span>
+      <span class="people-leaderbord">5. Крут 228 (бывший топ 1)</span>
     </div>
 
-    <div id="container">
-      <img
-        class="image-container"
-        src="./img/mamac sofia.jpg"
-        alt="У вас не загрузилась картинка"
-        id="clickableImage"
-      />
-      <h2 id="clickCount">Кликов: 0</h2>
-      <button class="button-price" id="plus1Click">
-        <p id="priceDisplay">100</p>
-      </button>
+    <div id="container" class="card">
+      <div style="position: relative;">
+        <img
+          class="image-container"
+          src="./img/mamac sofia.jpg"
+          alt="Кликай!"
+          id="clickableImage"
+        />
+      </div>
+      
+      <div class="stats-container">
+        <h2 id="clickCount">Кликов: 0</h2>
+        <h3 id="autoCountDisplay" style="color: #88d3ce; margin-top: -10px; margin-bottom: 20px;">Автоклик: 0/сек</h3>
+        
+        <div class="upgrades-grid">
+          <button class="button-price" id="plus1Click">
+            +1 к силе клика <br><span id="priceDisplay">100</span>
+          </button>
+          
+          <button class="button-price auto-btn" id="autoClickUpgrade">
+            Купить Автокликер <br><span id="autoPriceDisplay">500</span>
+          </button>
+        </div>
+      </div>
     </div>
 
-    <div class="crypto">
+    <div class="crypto card">
       <h2>Покупай Свино-крипту за клики и обменивай их на прикольные штуки!</h2>
-      <a href="img/crypto.html" style="color: #f1c40f; text-decoration: none; font-weight: bold;">
-    💰 Перейти на Свино-Биржу
-</a>
+      <a href="img/crypto.html" style="color: #f1c40f; text-decoration: none; font-weight: bold; font-size: 1.2rem; display: inline-block; margin-top: 10px;">
+        💰 Перейти на Свино-Биржу
+      </a>
     </div>
 
-    <footer class="case-magazine">
+    <footer class="case-magazine card">
       <h2>Магазин кейсов</h2>
       <a target="_blank" href="./magazine/magazine.html">
         <img
           class="magazine-link"
           src="./img/image-magazine.png"
-          alt="У вас не загрузилась картинка"
+          alt="Магазин"
         />
       </a>
     </footer>
-    <button id="logoutBtn" style="position: absolute; top: 10px; right: 10px">
-      Выйти
-    </button>
 
+    <button id="logoutBtn">Выйти</button>
 
     <div id="inventory-icon"></div>
-
     
     <div id="inventory-panel">
-      <h3 style="text-align: center; margin-bottom: 10px">Инвентарь</h3>
-      <div id="inventory-items" style="
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-  "></div>
+      <h3 style="text-align: center; margin-bottom: 10px; border-bottom: 1px solid #555; padding-bottom: 5px;">Инвентарь</h3>
+      <div id="inventory-items" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;"></div>
     </div>
 
     <script src="index.js"></script>

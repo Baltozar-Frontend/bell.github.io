@@ -1,176 +1,119 @@
-/* --- ОСНОВА (DEEP DARK) --- */
 :root {
-  --bg-dark: #090a0f;
-  --bg-light: #1b2735;
-  --cyan: #00f3ff;
-  --cyan-dim: rgba(0, 243, 255, 0.2);
-  --purple: #bc13fe;
-  --red: #ff2a2a;
-  --gold: #f1c40f;
-  --text-main: #e0e6ed;
-  --glass: rgba(15, 20, 35, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.05);
+  --bg: #e5e5ea;
+  --panel: #ffffff;
+  --text-main: #1c1c1e;
+  --text-sub: #8e8e93;
+  --accent: #007aff;
+  --border: #d1d1d6;
+  --shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
 }
 
 * { box-sizing: border-box; }
 
 body {
-  background: radial-gradient(circle at center, var(--bg-light) 0%, var(--bg-dark) 100%);
-  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: var(--bg);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   margin: 0; padding: 20px; min-height: 100vh;
   color: var(--text-main);
-  overflow-x: hidden;
+  user-select: none;
 }
 
-/* --- СТЕКЛЯННЫЕ ПАНЕЛИ --- */
-.glass-panel {
-  background: var(--glass);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-  padding: 20px;
+.panel {
+  background: var(--panel);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  padding: 24px;
+  border: 1px solid var(--border);
 }
 
 .panel-title {
-  color: var(--cyan);
-  font-size: 1.1rem;
-  letter-spacing: 2px;
+  color: var(--text-sub);
+  font-size: 0.9rem;
   text-transform: uppercase;
+  letter-spacing: 1px;
   margin-top: 0;
-  border-bottom: 1px solid var(--cyan-dim);
+  border-bottom: 1px solid var(--border);
   padding-bottom: 10px;
-  text-shadow: 0 0 10px var(--cyan-dim);
 }
 
-/* --- ВЕРХНЯЯ ПАНЕЛЬ (HEADER) --- */
-.top-bar {
+/* Шапка */
+.app-header {
   display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 20px; padding: 15px 25px;
+  margin-bottom: 20px; background: var(--panel);
+  padding: 15px 24px; border-radius: 20px; box-shadow: var(--shadow);
 }
 
-.user-info { display: flex; align-items: center; gap: 30px; width: 60%; }
-
-.cyber-input {
-  background: rgba(0, 0, 0, 0.5); border: 1px solid var(--cyan-dim);
-  color: var(--cyan); padding: 10px 15px; border-radius: 8px;
-  font-family: monospace; font-size: 1.1rem; width: 250px;
-  transition: 0.3s;
-}
-.cyber-input:focus { outline: none; border-color: var(--cyan); box-shadow: 0 0 15px var(--cyan-dim); }
-
-/* Шкала опыта */
-.level-box { flex-grow: 1; display: flex; align-items: center; gap: 15px; font-weight: bold; }
-#levelDisplay { color: var(--purple); text-shadow: 0 0 10px rgba(188, 19, 254, 0.5); }
-.exp-bar { width: 100%; height: 8px; background: #111; border-radius: 4px; overflow: hidden; border: 1px solid #333; }
-.exp-fill { width: 0%; height: 100%; background: linear-gradient(90deg, var(--purple), var(--cyan)); transition: width 0.3s ease; }
-
-/* --- СЕТКА (GRID) --- */
-.main-grid {
-  display: grid; grid-template-columns: 280px 1fr 280px; gap: 20px;
-  min-height: 60vh;
+.modern-input {
+  background: var(--bg); border: none; padding: 10px 16px;
+  border-radius: 10px; font-size: 1rem; color: var(--text-main);
+  outline: none; width: 200px;
 }
 
-/* --- КНОПКИ АПГРЕЙДОВ --- */
-.upgrades-list { display: flex; flex-direction: column; gap: 12px; }
+.stats-badge { flex-grow: 1; margin: 0 30px; }
+.stats-badge span { font-weight: bold; font-size: 0.9rem; color: var(--text-main); }
+.exp-bar { height: 6px; background: var(--bg); border-radius: 3px; margin-top: 5px; overflow: hidden; }
+.exp-fill { height: 100%; background: var(--accent); width: 0%; transition: 0.3s; }
 
-.cyber-btn {
-  background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.1);
-  color: white; border-radius: 10px; padding: 12px; cursor: pointer;
-  text-align: left; display: grid; grid-template-areas: "name price" "effect price";
-  transition: 0.2s; position: relative; overflow: hidden;
-}
-.cyber-btn:hover { background: rgba(0, 243, 255, 0.1); border-color: var(--cyan); transform: translateX(5px); }
-.cyber-btn:active { transform: translateX(2px) scale(0.98); }
-
-.upg-name { grid-area: name; font-weight: bold; font-size: 0.9rem; }
-.upg-effect { grid-area: effect; color: #888; font-size: 0.8rem; margin-top: 4px; }
-.upg-price { grid-area: price; text-align: right; color: var(--cyan); font-weight: bold; align-self: center; }
-
-.gold-btn { border-color: var(--gold); box-shadow: 0 0 15px rgba(241, 196, 15, 0.2); }
-.gold-btn .upg-name, .gold-btn .upg-price { color: var(--gold); }
-.gold-btn:hover { background: rgba(241, 196, 15, 0.1); border-color: var(--gold); }
-
-/* --- ИГРОВАЯ ЗОНА --- */
-.game-zone { display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
-
-.score-display { text-align: center; margin-bottom: 30px; }
-.combo-meter { color: var(--gold); font-weight: 900; font-size: 1.2rem; opacity: 0; transition: 0.3s; letter-spacing: 2px;}
-.combo-meter.active { opacity: 1; text-shadow: 0 0 15px var(--gold); }
-
-#clickCount { font-size: 4rem; margin: 5px 0; color: #fff; text-shadow: 0 0 20px var(--cyan); font-family: monospace; }
-.auto-text { color: #888; font-size: 1rem; margin: 0; }
-
-.image-wrapper { position: relative; border-radius: 50%; padding: 10px; background: rgba(0,243,255,0.05); border: 2px dashed rgba(0,243,255,0.3); animation: spin 20s linear infinite; }
-@keyframes spin { 100% { transform: rotate(360deg); } }
-
-.cyber-image {
-  width: 280px; height: 280px; border-radius: 50%; object-fit: cover;
-  cursor: pointer; transition: 0.1s; animation: counter-spin 20s linear infinite;
-  box-shadow: 0 0 40px rgba(0,0,0,0.8) inset, 0 0 30px var(--cyan-dim);
-  -webkit-user-drag: none;
-}
-@keyframes counter-spin { 100% { transform: rotate(-360deg); } }
-
-.cyber-image:active { transform: scale(0.92); filter: brightness(1.2); }
-
-/* Эффекты клика */
-.float-text {
-  position: absolute; font-weight: 900; font-size: 2.5rem; pointer-events: none;
-  animation: floatUp 0.8s ease-out forwards; z-index: 100;
-}
-.normal-hit { color: var(--cyan); text-shadow: 0 0 10px var(--cyan); }
-.crit-hit { color: var(--red); font-size: 3.5rem; text-shadow: 0 0 20px var(--red); z-index: 101; }
-
-@keyframes floatUp {
-  0% { opacity: 1; transform: translateY(0) scale(1); }
-  100% { opacity: 0; transform: translateY(-100px) scale(1.5); }
+/* Кнопки */
+.btn-outline {
+  background: transparent; border: 1px solid #ff3b30; color: #ff3b30;
+  padding: 8px 16px; border-radius: 10px; cursor: pointer; font-weight: 600;
 }
 
-@keyframes shake {
-  0%, 100% { transform: translate(0, 0); }
-  25% { transform: translate(-5px, 5px); }
-  50% { transform: translate(5px, -5px); }
-  75% { transform: translate(-5px, -5px); }
+.main-layout { display: grid; grid-template-columns: 280px 1fr 280px; gap: 20px; }
+
+/* Апгрейды */
+.upgrades-list { display: flex; flex-direction: column; gap: 10px; }
+.upgrade-btn {
+  background: var(--bg); border: none; padding: 12px; border-radius: 12px;
+  display: flex; justify-content: space-between; align-items: center;
+  cursor: pointer; transition: 0.2s; text-align: left;
 }
-.shake-active { animation: shake 0.2s; }
+.upgrade-btn:active { transform: scale(0.96); }
+.upg-info { display: flex; flex-direction: column; }
+.upg-name { font-weight: 600; color: var(--text-main); font-size: 0.95rem; }
+.upg-effect { font-size: 0.8rem; color: var(--text-sub); }
+.upg-price { font-weight: bold; color: var(--accent); }
 
-/* --- ПРАВАЯ ПАНЕЛЬ --- */
-.leaderboard { display: flex; flex-direction: column; gap: 8px; margin-bottom: 30px; }
-.lead-item { background: rgba(0,0,0,0.3); padding: 10px 15px; border-radius: 6px; font-size: 0.9rem; border-left: 3px solid #555; }
-.lead-item.top-1 { border-color: var(--gold); color: var(--gold); font-weight: bold; display: flex; align-items: center; background: rgba(241,196,15,0.1); }
-.corona { width: 20px; margin-right: 10px; filter: drop-shadow(0 0 5px var(--gold)); }
+.legendary-btn { background: #333; }
+.legendary-btn .upg-name, .legendary-btn .upg-effect { color: #fff; }
+.legendary-btn .upg-price { color: #f1c40f; }
 
-.external-links { display: flex; flex-direction: column; gap: 15px; }
-.cyber-link { display: block; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px; text-decoration: none; color: white; border: 1px solid #333; transition: 0.3s; text-align: center; font-weight: bold; }
-.cyber-link:hover { border-color: var(--purple); background: rgba(188, 19, 254, 0.1); transform: translateY(-3px); }
-.gold-link:hover { border-color: var(--gold); background: rgba(241, 196, 15, 0.1); }
+.prestige-btn { background: #ff9500; }
+.prestige-btn .upg-name, .prestige-btn .upg-price, .prestige-btn .upg-effect { color: white; }
 
-/* --- КНОПКИ УПРАВЛЕНИЯ --- */
-.cyber-btn-red { background: transparent; border: 1px solid var(--red); color: var(--red); padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-.cyber-btn-red:hover { background: var(--red); color: white; box-shadow: 0 0 15px rgba(255, 42, 42, 0.5); }
+/* Игра */
+.game-zone { display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+.score-text { font-size: 4rem; margin: 10px 0; font-weight: 800; letter-spacing: -2px; }
+.sub-text { color: var(--text-sub); font-size: 1rem; margin: 0; }
 
-/* --- ИНВЕНТАРЬ --- */
-#inventory-icon {
-  position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;
-  background: url('./img/inventar.jpg') center/cover; background-color: #111;
-  cursor: pointer; z-index: 1000; border: 2px solid var(--purple); border-radius: 50%;
-  box-shadow: 0 0 20px rgba(188, 19, 254, 0.4); transition: 0.3s;
-}
-#inventory-icon:hover { transform: scale(1.1) rotate(15deg); box-shadow: 0 0 30px rgba(188, 19, 254, 0.8); }
+.combo-meter { color: #ff9500; font-weight: bold; opacity: 0; transition: 0.3s; }
+.combo-meter.active { opacity: 1; transform: scale(1.1); }
 
-#inventory-panel {
-  position: fixed; bottom: 100px; right: 30px; width: 280px; max-height: 400px;
-  display: none; z-index: 999; overflow-y: auto;
-}
+.image-wrapper { margin-top: 30px; border-radius: 50%; padding: 15px; background: var(--bg); box-shadow: inset var(--shadow); }
+.main-image { width: 250px; height: 250px; border-radius: 50%; object-fit: cover; cursor: pointer; transition: 0.1s; -webkit-user-drag: none; }
+.main-image:active { transform: scale(0.92); }
+
+/* Эффекты */
+.float-text { position: absolute; font-weight: 800; font-size: 2rem; pointer-events: none; animation: floatUp 0.8s forwards; color: var(--text-main); }
+.crit-hit { color: #ff3b30; font-size: 3rem; z-index: 10; }
+@keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-80px); } }
+
+/* Лидеры и ссылки */
+.lead-item { padding: 10px; border-bottom: 1px solid var(--bg); font-size: 0.9rem; font-weight: 500; }
+.top-1 { font-weight: bold; color: #ff9500; display: flex; align-items: center; }
+.corona { width: 18px; margin-right: 8px; }
+
+.nav-links { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+.nav-btn { background: var(--text-main); color: white; text-decoration: none; padding: 12px; border-radius: 12px; text-align: center; font-weight: 600; }
+.nav-btn.outline { background: transparent; border: 2px solid var(--text-main); color: var(--text-main); }
+
+/* Инвентарь */
+#inventory-icon { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: url('./img/inventar.jpg') center/cover; border-radius: 50%; box-shadow: 0 10px 20px rgba(0,0,0,0.2); cursor: pointer; z-index: 100; border: 3px solid white; }
+#inventory-panel { position: fixed; bottom: 100px; right: 30px; width: 280px; display: none; z-index: 99; }
 .inv-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.inv-item { background: rgba(0,0,0,0.5); border: 1px solid #333; border-radius: 8px; padding: 5px; text-align: center; }
+.inv-item { background: var(--bg); border-radius: 8px; padding: 5px; text-align: center; }
 .inv-item img { width: 100%; border-radius: 4px; }
-.inv-item-name { font-size: 10px; margin-top: 5px; color: #aaa; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.inv-item-name { font-size: 10px; color: var(--text-sub); }
 
-/* Адаптивность */
-@media (max-width: 1024px) {
-  .main-grid { grid-template-columns: 1fr; }
-  .user-info { width: 100%; flex-direction: column; align-items: flex-start; gap: 10px; }
-}
+@media (max-width: 900px) { .main-layout { grid-template-columns: 1fr; } }

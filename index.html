@@ -2,93 +2,100 @@
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>София | Cyber Clicker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>София | Clicker App</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="manifest" href="manifest.json" />
     <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
   </head>
   <body>
-    <header class="glass-panel top-bar">
-      <div class="user-info">
-        <input class="cyber-input" id="userName" type="text" placeholder="Идентификатор игрока..." />
-        <div class="level-box">
-          <span id="levelDisplay">LVL: 1</span>
-          <div class="exp-bar"><div class="exp-fill" id="expFill"></div></div>
-        </div>
+    <header class="app-header">
+      <input class="modern-input" id="userName" type="text" placeholder="Имя игрока" />
+      <div class="stats-badge">
+        <span id="levelDisplay">Уровень 1</span>
+        <div class="exp-bar"><div class="exp-fill" id="expFill"></div></div>
       </div>
-      <button id="logoutBtn" class="cyber-btn-red">ОТКЛЮЧИТЬСЯ</button>
+      <button id="logoutBtn" class="btn-outline">Выйти</button>
     </header>
 
-    <div class="main-grid">
+    <div class="main-layout">
       
-      <aside class="glass-panel upgrades-panel">
-        <h3 class="panel-title">ТЕРМИНАЛ АПГРЕЙДОВ</h3>
+      <aside class="panel">
+        <h3 class="panel-title">Улучшения</h3>
         <div class="upgrades-list">
-          <button class="cyber-btn" id="plus1Click">
-            <span class="upg-name">Оптимизация клика</span>
-            <span class="upg-effect">+1 к силе</span>
+          <button class="upgrade-btn" id="plus1Click">
+            <div class="upg-info">
+              <span class="upg-name">Усилить клик</span>
+              <span class="upg-effect">+1 к силе</span>
+            </div>
             <span class="upg-price" id="priceDisplay">100 C</span>
           </button>
           
-          <button class="cyber-btn" id="autoClickUpgrade">
-            <span class="upg-name">Дрон-Автокликер</span>
-            <span class="upg-effect">+1 клик/сек</span>
+          <button class="upgrade-btn" id="autoClickUpgrade">
+            <div class="upg-info">
+              <span class="upg-name">Автокликер</span>
+              <span class="upg-effect">+1 клик/сек</span>
+            </div>
             <span class="upg-price" id="autoPriceDisplay">500 C</span>
           </button>
 
-          <button class="cyber-btn" id="critUpgrade">
-            <span class="upg-name">Вероятность Крита</span>
-            <span class="upg-effect">+5% Шанс</span>
+          <button class="upgrade-btn" id="critUpgrade">
+            <div class="upg-info">
+              <span class="upg-name">Шанс крита</span>
+              <span class="upg-effect">+5% шанс</span>
+            </div>
             <span class="upg-price" id="critPriceDisplay">1000 C</span>
           </button>
 
-          <button class="cyber-btn gold-btn" id="glolvesUpgrade" style="display: none;">
-            <span class="upg-name">Экипировка: Glolves.glb</span>
-            <span class="upg-effect">СИЛА x10</span>
-            <span class="upg-price" id="glolvesPriceDisplay">100000 C</span>
+          <button class="upgrade-btn legendary-btn" id="glolvesUpgrade" style="display: none;">
+            <div class="upg-info">
+              <span class="upg-name">Glolves.glb</span>
+              <span class="upg-effect">Множитель x10</span>
+            </div>
+            <span class="upg-price">100k C</span>
+          </button>
+          
+          <button class="upgrade-btn prestige-btn" id="prestigeBtn">
+            <div class="upg-info">
+              <span class="upg-name">Перерождение</span>
+              <span class="upg-effect">Сброс ради x2 бонуса</span>
+            </div>
+            <span class="upg-price" id="prestigeLevel">Престиж: 0</span>
           </button>
         </div>
       </aside>
 
-      <main class="glass-panel game-zone" id="container">
+      <main class="panel game-zone" id="container">
         <div class="score-display">
           <div class="combo-meter" id="comboMeter">COMBO x1.0</div>
-          <h2 id="clickCount" class="glitch-text">0</h2>
-          <h3 id="autoCountDisplay" class="auto-text">0/сек</h3>
+          <h2 id="clickCount" class="score-text">0</h2>
+          <h3 id="autoCountDisplay" class="sub-text">0/сек</h3>
         </div>
 
         <div class="image-wrapper" id="imageWrapper">
-          <img class="cyber-image" src="./img/mamac sofia.jpg" alt="Target" id="clickableImage" />
+          <img class="main-image" src="./img/mamac sofia.jpg" alt="Target" id="clickableImage" />
         </div>
       </main>
 
-      <aside class="glass-panel right-panel">
-        <h3 class="panel-title">СЕТЬ (РАНГИ)</h3>
+      <aside class="panel">
+        <h3 class="panel-title">Топ Лидеров</h3>
         <div class="leaderboard">
-          <div class="lead-item top-1">
-            <img class="corona" src="./img/corona.png" alt="Top 1" />
-            <span>ПЫЛЬНЫЕ БОМЖИ</span>
-          </div>
+          <div class="lead-item top-1"><img class="corona" src="./img/corona.png" /> 1. ПЫЛЬНЫЕ БОМЖИ</div>
           <div class="lead-item">2. Дилдабек</div>
           <div class="lead-item">3. Артом</div>
           <div class="lead-item">4. Яромир</div>
-          <div class="lead-item">5. Крут 228 (ex-top)</div>
         </div>
 
-        <div class="external-links">
-          <a href="img/crypto.html" class="cyber-link gold-link">
-            <span class="icon">📈</span> Свино-Биржа
-          </a>
-          <a target="_blank" href="./magazine/magazine.html" class="cyber-link">
-            <span class="icon">📦</span> Даркнет-Кейсы
-          </a>
+        <div class="nav-links">
+          <a href="img/crypto.html" class="nav-btn">📊 Свино-Биржа</a>
+          <a target="_blank" href="./magazine/magazine.html" class="nav-btn outline">📦 Магазин кейсов</a>
         </div>
       </aside>
     </div>
 
     <div id="inventory-icon"></div>
-    <div class="glass-panel" id="inventory-panel">
-      <h3 class="panel-title" style="font-size: 1rem; margin-bottom: 10px;">ХРАНИЛИЩЕ</h3>
+    <div class="panel" id="inventory-panel">
+      <h3 class="panel-title">Инвентарь</h3>
       <div id="inventory-items" class="inv-grid"></div>
     </div>
 

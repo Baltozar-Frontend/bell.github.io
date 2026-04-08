@@ -1,0 +1,20 @@
+{
+  "name": "Sofia Clicker",
+  "short_name": "Sofia",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#e0e0e0",
+  "theme_color": "#808080",
+  "icons": [
+    {
+      "src": "./img/mamac sofia.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "./img/mamac sofia.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}

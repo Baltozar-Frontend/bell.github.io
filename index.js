@@ -1,24 +1,28 @@
-// Основное состояние игры (Сохраняется в localStorage)
+// --- РЕГИСТРАЦИЯ PWA (SERVICE WORKER) ---
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').then(() => console.log("PWA Ready"));
+}
+
+// --- СОСТОЯНИЕ ИГРЫ ---
 const gameState = {
   clicks: parseInt(localStorage.getItem("clicks")) || 0,
   clickIncrement: parseInt(localStorage.getItem("clickIncrement")) || 1,
   priceForUpgrade: parseInt(localStorage.getItem("priceForUpgrade")) || 100,
   autoClickerCount: parseInt(localStorage.getItem("autoClickerCount")) || 0,
   autoPrice: parseInt(localStorage.getItem("autoPrice")) || 500,
-  critChance: parseFloat(localStorage.getItem("critChance")) || 0, // в процентах (0-100)
+  critChance: parseFloat(localStorage.getItem("critChance")) || 0,
   critPrice: parseInt(localStorage.getItem("critPrice")) || 1000,
   level: parseInt(localStorage.getItem("level")) || 1,
   exp: parseInt(localStorage.getItem("exp")) || 0,
   hasGlolves: localStorage.getItem("hasGlolves") === 'true',
+  prestigeCount: parseInt(localStorage.getItem("prestigeCount")) || 0,
   userName: localStorage.getItem("userName") || ""
 };
 
-// Временные переменные (не сохраняются)
 let comboCounter = 0;
 let comboMultiplier = 1;
 let comboTimer = null;
 
-// Элементы DOM
 const el = {
   image: document.getElementById("clickableImage"),
   zone: document.getElementById("container"),
@@ -31,207 +35,156 @@ const el = {
   critBtn: document.getElementById("critUpgrade"),
   critPriceDisp: document.getElementById("critPriceDisplay"),
   glolvesBtn: document.getElementById("glolvesUpgrade"),
+  prestigeBtn: document.getElementById("prestigeBtn"),
+  prestigeLevel: document.getElementById("prestigeLevel"),
   comboMeter: document.getElementById("comboMeter"),
   levelDisp: document.getElementById("levelDisplay"),
-  expFill: document.getElementById("expFill"),
-  userInput: document.getElementById("userName"),
-  logoutBtn: document.getElementById("logoutBtn")
+  expFill: document.getElementById("expFill")
 };
 
-// Функция расчета опыта до следующего уровня
-function getExpForNextLevel() {
-  return Math.floor(100 * Math.pow(1.5, gameState.level - 1));
-}
+function getExpForNextLevel() { return Math.floor(100 * Math.pow(1.5, gameState.level - 1)); }
 
-// Сохранение
 function saveState() {
-  localStorage.setItem("clicks", gameState.clicks);
-  localStorage.setItem("clickIncrement", gameState.clickIncrement);
-  localStorage.setItem("priceForUpgrade", gameState.priceForUpgrade);
-  localStorage.setItem("autoClickerCount", gameState.autoClickerCount);
-  localStorage.setItem("autoPrice", gameState.autoPrice);
-  localStorage.setItem("critChance", gameState.critChance);
-  localStorage.setItem("critPrice", gameState.critPrice);
-  localStorage.setItem("level", gameState.level);
-  localStorage.setItem("exp", gameState.exp);
-  localStorage.setItem("hasGlolves", gameState.hasGlolves);
-  localStorage.setItem("userName", gameState.userName);
+  for (let key in gameState) {
+    localStorage.setItem(key, gameState[key]);
+  }
 }
 
-// Обновление интерфейса
+// СИНХРОНИЗАЦИЯ: Ловим обновления из других вкладок (Биржи)
+window.addEventListener('focus', () => {
+  const latestClicks = parseInt(localStorage.getItem("clicks")) || 0;
+  if (latestClicks !== gameState.clicks) {
+    gameState.clicks = latestClicks;
+    updateUI();
+  }
+});
+
 function updateUI() {
-  el.clickCount.textContent = Math.floor(gameState.clicks);
+  el.clickCount.textContent = Math.floor(gameState.clicks).toLocaleString();
   el.priceDisp.textContent = gameState.priceForUpgrade + " C";
   el.autoPriceDisp.textContent = gameState.autoPrice + " C";
   el.autoCountDisp.textContent = `${gameState.autoClickerCount}/сек`;
   el.critPriceDisp.textContent = gameState.critPrice + " C";
-  el.userInput.value = gameState.userName;
+  el.prestigeLevel.textContent = `Престиж: ${gameState.prestigeCount}`;
   
-  // Уровень и Опыт
-  el.levelDisp.textContent = `LVL: ${gameState.level}`;
-  const expNeeded = getExpForNextLevel();
-  const expPercent = Math.min(100, (gameState.exp / expNeeded) * 100);
-  el.expFill.style.width = `${expPercent}%`;
+  el.levelDisp.textContent = `Уровень ${gameState.level}`;
+  el.expFill.style.width = `${Math.min(100, (gameState.exp / getExpForNextLevel()) * 100)}%`;
 
-  // Появление секретного апгрейда (На 10 уровне)
-  if (gameState.level >= 10 && !gameState.hasGlolves) {
-    el.glolvesBtn.style.display = "grid";
-  } else {
-    el.glolvesBtn.style.display = "none";
-  }
-}
-
-// Управление Комбо
-function resetCombo() {
-  comboCounter = 0;
-  comboMultiplier = 1;
-  el.comboMeter.classList.remove("active");
+  if (gameState.level >= 10 && !gameState.hasGlolves) el.glolvesBtn.style.display = "flex";
+  else el.glolvesBtn.style.display = "none";
 }
 
 function handleCombo() {
   comboCounter++;
   clearTimeout(comboTimer);
-  
-  // Каждые 10 быстрых кликов увеличивают множитель, максимум x5
   comboMultiplier = Math.min(5, 1 + Math.floor(comboCounter / 10) * 0.5);
   
   if (comboMultiplier > 1) {
     el.comboMeter.classList.add("active");
     el.comboMeter.textContent = `COMBO x${comboMultiplier.toFixed(1)}`;
   }
-
-  // Если не кликать 1.5 секунды - комбо сбрасывается
-  comboTimer = setTimeout(resetCombo, 1500);
+  comboTimer = setTimeout(() => {
+    comboCounter = 0; comboMultiplier = 1; el.comboMeter.classList.remove("active");
+  }, 1500);
 }
 
-// Получение опыта
-function addExp(amount) {
-  gameState.exp += amount;
-  let expNeeded = getExpForNextLevel();
-  
-  if (gameState.exp >= expNeeded) {
-    gameState.level++;
-    gameState.exp -= expNeeded;
-    // Визуальный эффект левелапа (Тряска экрана)
-    document.body.classList.add("shake-active");
-    setTimeout(() => document.body.classList.remove("shake-active"), 200);
-  }
-}
-
-// Создание вылетающих цифр
-function createFloatingNumber(x, y, amount, isCrit) {
-  const floatText = document.createElement("div");
-  floatText.className = `float-text ${isCrit ? 'crit-hit' : 'normal-hit'}`;
-  floatText.innerText = isCrit ? `КРИТ! +${amount}` : `+${amount}`;
-  
-  floatText.style.left = `${x + (Math.random() * 40 - 20)}px`;
-  floatText.style.top = `${y}px`;
-  
-  el.zone.appendChild(floatText);
-  setTimeout(() => floatText.remove(), 800);
-}
-
-// Основной Клик
 function handleClick(e) {
   handleCombo();
-  
-  let currentPower = gameState.clickIncrement * comboMultiplier;
+  // Бонус от престижа (каждый престиж дает +100% к базе)
+  let prestigeMult = 1 + gameState.prestigeCount;
+  let currentPower = gameState.clickIncrement * comboMultiplier * prestigeMult;
   let isCrit = false;
 
-  // Проверка на Крит
   if (Math.random() * 100 < gameState.critChance) {
-    currentPower *= 3; // Крит умножает силу на 3
-    isCrit = true;
-    el.zone.classList.add("shake-active");
-    setTimeout(() => el.zone.classList.remove("shake-active"), 200);
+    currentPower *= 3; isCrit = true;
   }
 
   currentPower = Math.floor(currentPower);
   gameState.clicks += currentPower;
+  gameState.exp += 1;
   
-  addExp(1); // 1 клик = 1 опыт
-  saveState();
-  updateUI();
+  if (gameState.exp >= getExpForNextLevel()) {
+    gameState.level++; gameState.exp = 0;
+  }
+  
+  saveState(); updateUI();
 
-  // Координаты для текста
   const rect = el.zone.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
-  createFloatingNumber(x, y, currentPower, isCrit);
+  const floatText = document.createElement("div");
+  floatText.className = `float-text ${isCrit ? 'crit-hit' : ''}`;
+  floatText.innerText = isCrit ? `КРИТ! +${currentPower}` : `+${currentPower}`;
+  floatText.style.left = `${e.clientX - rect.left + (Math.random()*40-20)}px`;
+  floatText.style.top = `${e.clientY - rect.top}px`;
+  el.zone.appendChild(floatText);
+  setTimeout(() => floatText.remove(), 800);
 }
 
-// Покупки
-function buyUpgrade(costVar, levelVar, costMult, callback) {
+function buyUpgrade(costVar, levelVar, costMult) {
   if (gameState.clicks >= gameState[costVar]) {
     gameState.clicks -= gameState[costVar];
-    gameState[levelVar] += (levelVar === 'critChance' ? 5 : 1); // Крит растет на 5%
+    gameState[levelVar] += (levelVar === 'critChance' ? 5 : 1);
     gameState[costVar] = Math.floor(gameState[costVar] * costMult);
-    if(callback) callback();
-    saveState();
-    updateUI();
-  } else {
-    alert("НЕДОСТАТОЧНО СРЕДСТВ В СИСТЕМЕ!");
+    saveState(); updateUI();
   }
 }
 
-// Инициализация
+// Престиж (Сброс прогресса ради множителя)
+el.prestigeBtn.addEventListener("click", () => {
+  if (gameState.level >= 15) {
+    if(confirm("Сбросить весь прогресс (кроме Glolves) ради вечного x2 множителя?")) {
+      gameState.clicks = 0; gameState.clickIncrement = 1;
+      gameState.priceForUpgrade = 100; gameState.autoClickerCount = 0;
+      gameState.autoPrice = 500; gameState.critChance = 0;
+      gameState.critPrice = 1000; gameState.level = 1; gameState.exp = 0;
+      gameState.prestigeCount++;
+      saveState(); updateUI();
+    }
+  } else {
+    alert("Престиж доступен только с 15 уровня!");
+  }
+});
+
 function initGame() {
-  // Обработчики кликов
   el.image.addEventListener("mousedown", handleClick);
-  
   el.plus1Btn.addEventListener("click", () => buyUpgrade('priceForUpgrade', 'clickIncrement', 1.6));
   el.autoBtn.addEventListener("click", () => buyUpgrade('autoPrice', 'autoClickerCount', 1.8));
   el.critBtn.addEventListener("click", () => {
-    if (gameState.critChance >= 50) return alert("Максимальный шанс крита достигнут!");
+    if (gameState.critChance >= 50) return;
     buyUpgrade('critPrice', 'critChance', 2.5);
   });
 
-  // Легендарный апгрейд
   el.glolvesBtn.addEventListener("click", () => {
     if (gameState.clicks >= 100000) {
       gameState.clicks -= 100000;
       gameState.hasGlolves = true;
-      gameState.clickIncrement *= 10; // Умножаем силу в 10 раз
-      alert("АРТЕФАКТ 'Glolves.glb' ИНТЕГРИРОВАН! Сила клика x10!");
+      gameState.clickIncrement *= 10;
       
-      // Добавляем в инвентарь (визуально)
       const inv = JSON.parse(localStorage.getItem('inventory')) || [];
-      inv.push({ name: "Glolves.glb", image: "./img/inventar.jpg" }); // Используем заглушку картинки
+      inv.push({ name: "Glolves.glb", image: "./img/inventar.jpg" });
       localStorage.setItem('inventory', JSON.stringify(inv));
       updateInventory();
-
-      saveState();
-      updateUI();
-    } else {
-      alert("НУЖНО БОЛЬШЕ КЛИКОВ (100,000)!");
+      
+      saveState(); updateUI();
+      alert("Экипирован предмет: Glolves.glb. Сила x10!");
     }
   });
 
-  // Имя и Выход
-  el.userInput.addEventListener("input", (e) => {
-    gameState.userName = e.target.value;
-    saveState();
-  });
-  el.logoutBtn.addEventListener("click", () => {
-    localStorage.removeItem('isLoggedIn');
-    window.location.href = "./sign_in/sign-in.html";
+  document.getElementById("userName").addEventListener("input", (e) => {
+    gameState.userName = e.target.value; saveState();
   });
 
-  // Автокликер (раз в секунду)
   setInterval(() => {
     if (gameState.autoClickerCount > 0) {
-      gameState.clicks += gameState.autoClickerCount;
-      addExp(Math.floor(gameState.autoClickerCount / 2)); // Пассивный опыт
-      updateUI();
-      saveState();
+      gameState.clicks += gameState.autoClickerCount * (1 + gameState.prestigeCount);
+      updateUI(); saveState();
     }
   }, 1000);
 
   updateUI();
 }
 
-// --- ИНВЕНТАРЬ ---
-document.getElementById('inventory-icon').addEventListener('click', function() {
+// Инвентарь
+document.getElementById('inventory-icon').addEventListener('click', () => {
   const panel = document.getElementById('inventory-panel');
   panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
 });
@@ -239,25 +192,14 @@ document.getElementById('inventory-icon').addEventListener('click', function() {
 function updateInventory() {
   const items = JSON.parse(localStorage.getItem('inventory')) || [];
   const container = document.getElementById('inventory-items');
-  
-  if (items.length === 0) {
-    container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #666; font-size: 0.9rem;">Пусто</div>';
-  } else {
-    container.innerHTML = items.map(item => `
-      <div class="inv-item">
-        <img src="${item.image}" alt="item">
-        <div class="inv-item-name">${item.name}</div>
-      </div>
-    `).join('');
-  }
+  if (items.length === 0) container.innerHTML = '<div style="grid-column: 1/-1; text-align: center;">Пусто</div>';
+  else container.innerHTML = items.map(i => `<div class="inv-item"><img src="${i.image}"><div class="inv-item-name">${i.name}</div></div>`).join('');
 }
 
-// Запуск
 document.addEventListener('DOMContentLoaded', () => {
   if (!localStorage.getItem('inventory_initialized')) {
     localStorage.setItem('inventory', JSON.stringify([]));
     localStorage.setItem('inventory_initialized', 'true');
   }
-  updateInventory();
-  initGame();
+  updateInventory(); initGame();
 });

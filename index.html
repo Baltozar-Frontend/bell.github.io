@@ -3,29 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>София | Clicker App</title>
+    <title>София | Hard Clicker</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="manifest" href="manifest.json" />
     <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
   </head>
   <body>
     <header class="app-header">
-      <input class="modern-input" id="userName" type="text" placeholder="Имя игрока" />
+      <input class="modern-input" id="userName" type="text" placeholder="Идентификатор" />
       <div class="stats-badge">
-        <span id="levelDisplay">Уровень 1</span>
+        <span id="levelDisplay">УРОВЕНЬ 1</span>
         <div class="exp-bar"><div class="exp-fill" id="expFill"></div></div>
       </div>
-      <button id="logoutBtn" class="btn-outline">Выйти</button>
+      <button id="logoutBtn" class="btn-outline">ВЫХОД</button>
     </header>
 
     <div class="main-layout">
-      
       <aside class="panel">
-        <h3 class="panel-title">Улучшения</h3>
+        <h3 class="panel-title">УЛУЧШЕНИЯ</h3>
         <div class="upgrades-list">
           <button class="upgrade-btn" id="plus1Click">
             <div class="upg-info">
-              <span class="upg-name">Усилить клик</span>
+              <span class="upg-name">Тяжелый клик</span>
               <span class="upg-effect">+1 к силе</span>
             </div>
             <span class="upg-price" id="priceDisplay">100 C</span>
@@ -33,7 +32,7 @@
           
           <button class="upgrade-btn" id="autoClickUpgrade">
             <div class="upg-info">
-              <span class="upg-name">Автокликер</span>
+              <span class="upg-name">Дрон-майнер</span>
               <span class="upg-effect">+1 клик/сек</span>
             </div>
             <span class="upg-price" id="autoPriceDisplay">500 C</span>
@@ -41,8 +40,8 @@
 
           <button class="upgrade-btn" id="critUpgrade">
             <div class="upg-info">
-              <span class="upg-name">Шанс крита</span>
-              <span class="upg-effect">+5% шанс</span>
+              <span class="upg-name">Оптика крита</span>
+              <span class="upg-effect">+5% шанс (x3 урон)</span>
             </div>
             <span class="upg-price" id="critPriceDisplay">1000 C</span>
           </button>
@@ -50,17 +49,17 @@
           <button class="upgrade-btn legendary-btn" id="glolvesUpgrade" style="display: none;">
             <div class="upg-info">
               <span class="upg-name">Glolves.glb</span>
-              <span class="upg-effect">Множитель x10</span>
+              <span class="upg-effect">МНОЖИТЕЛЬ x10</span>
             </div>
-            <span class="upg-price">100k C</span>
+            <span class="upg-price">100,000 C</span>
           </button>
-          
+
           <button class="upgrade-btn prestige-btn" id="prestigeBtn">
             <div class="upg-info">
-              <span class="upg-name">Перерождение</span>
-              <span class="upg-effect">Сброс ради x2 бонуса</span>
+              <span class="upg-name">Престиж</span>
+              <span class="upg-effect">Сброс ради x2 дохода</span>
             </div>
-            <span class="upg-price" id="prestigeLevel">Престиж: 0</span>
+            <span class="upg-price" id="prestigeLevel">Ранг: 0</span>
           </button>
         </div>
       </aside>
@@ -75,17 +74,19 @@
         <div class="image-wrapper" id="imageWrapper">
           <img class="main-image" src="./img/mamac sofia.jpg" alt="Target" id="clickableImage" />
         </div>
+
+        <button id="skillBoostBtn" class="skill-btn">⚡ ПЕРЕГРУЗКА (Готово)</button>
       </main>
 
       <aside class="panel">
-        <h3 class="panel-title">Топ Лидеров</h3>
-        <div class="leaderboard">
-          <div class="lead-item top-1"><img class="corona" src="./img/corona.png" /> 1. ПЫЛЬНЫЕ БОМЖИ</div>
-          <div class="lead-item">2. Дилдабек</div>
-          <div class="lead-item">3. Артом</div>
-          <div class="lead-item">4. Яромир</div>
+        <h3 class="panel-title">ДОСТИЖЕНИЯ</h3>
+        <div class="achievements-list" id="achievementsList">
+          <div class="achiev-item" id="ach1">Новичок (100 кликов)</div>
+          <div class="achiev-item" id="ach2">Маньяк (1,000 кликов)</div>
+          <div class="achiev-item" id="ach3">Богач (10,000 монет)</div>
         </div>
 
+        <h3 class="panel-title" style="margin-top: 20px;">НАВИГАЦИЯ</h3>
         <div class="nav-links">
           <a href="img/crypto.html" class="nav-btn">📊 Свино-Биржа</a>
           <a target="_blank" href="./magazine/magazine.html" class="nav-btn outline">📦 Магазин кейсов</a>
@@ -95,7 +96,7 @@
 
     <div id="inventory-icon"></div>
     <div class="panel" id="inventory-panel">
-      <h3 class="panel-title">Инвентарь</h3>
+      <h3 class="panel-title">ИНВЕНТАРЬ</h3>
       <div id="inventory-items" class="inv-grid"></div>
     </div>
 

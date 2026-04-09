@@ -1,105 +1,67 @@
 <!DOCTYPE html>
 <html lang="ru">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>София | Hard Clicker</title>
-    <link rel="stylesheet" href="style.css" />
-    <link rel="manifest" href="manifest.json" />
-    <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
-  </head>
-  <body>
-    <header class="app-header">
-      <input class="modern-input" id="userName" type="text" placeholder="Идентификатор" />
-      <div class="stats-badge">
-        <span id="levelDisplay">УРОВЕНЬ 1</span>
-        <div class="exp-bar"><div class="exp-fill" id="expFill"></div></div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>София | Perfect Clicker</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+  <div class="app-container">
+    <header class="header">
+      <div class="user-profile">
+        <input type="text" id="userName" class="name-input" placeholder="Введи имя...">
+        <div class="level-badge" id="levelDisplay">LVL 1</div>
       </div>
-      <button id="logoutBtn" class="btn-outline">ВЫХОД</button>
+      <div class="balance-display">
+        <span id="clickCount">0</span> 💎
+      </div>
     </header>
 
-    <div class="main-layout">
-      <aside class="panel">
-        <h3 class="panel-title">УЛУЧШЕНИЯ</h3>
-        <div class="upgrades-list">
-          <button class="upgrade-btn" id="plus1Click">
+    <div class="main-content">
+      <aside class="shop-panel">
+        <h2>АПГРЕЙДЫ</h2>
+        <div class="upgrade-list">
+          <button class="upg-btn" id="btn-power">
             <div class="upg-info">
-              <span class="upg-name">Тяжелый клик</span>
-              <span class="upg-effect">+1 к силе</span>
+              <span class="upg-title">Сила клика</span>
+              <span class="upg-desc" id="power-desc">+1 за клик</span>
             </div>
-            <span class="upg-price" id="priceDisplay">100 C</span>
-          </button>
-          
-          <button class="upgrade-btn" id="autoClickUpgrade">
-            <div class="upg-info">
-              <span class="upg-name">Дрон-майнер</span>
-              <span class="upg-effect">+1 клик/сек</span>
-            </div>
-            <span class="upg-price" id="autoPriceDisplay">500 C</span>
+            <span class="upg-cost" id="cost-power">100 💎</span>
           </button>
 
-          <button class="upgrade-btn" id="critUpgrade">
+          <button class="upg-btn" id="btn-auto">
             <div class="upg-info">
-              <span class="upg-name">Оптика крита</span>
-              <span class="upg-effect">+5% шанс (x3 урон)</span>
+              <span class="upg-title">Автокликер</span>
+              <span class="upg-desc" id="auto-desc">0/сек</span>
             </div>
-            <span class="upg-price" id="critPriceDisplay">1000 C</span>
+            <span class="upg-cost" id="cost-auto">500 💎</span>
           </button>
 
-          <button class="upgrade-btn legendary-btn" id="glolvesUpgrade" style="display: none;">
+          <button class="upg-btn legend-btn" id="btn-glolves" style="display: none;">
             <div class="upg-info">
-              <span class="upg-name">Glolves.glb</span>
-              <span class="upg-effect">МНОЖИТЕЛЬ x10</span>
+              <span class="upg-title">Glolves.glb</span>
+              <span class="upg-desc">Множитель силы x10</span>
             </div>
-            <span class="upg-price">100,000 C</span>
-          </button>
-
-          <button class="upgrade-btn prestige-btn" id="prestigeBtn">
-            <div class="upg-info">
-              <span class="upg-name">Престиж</span>
-              <span class="upg-effect">Сброс ради x2 дохода</span>
-            </div>
-            <span class="upg-price" id="prestigeLevel">Ранг: 0</span>
+            <span class="upg-cost">100,000 💎</span>
           </button>
         </div>
       </aside>
 
-      <main class="panel game-zone" id="container">
-        <div class="score-display">
-          <div class="combo-meter" id="comboMeter">COMBO x1.0</div>
-          <h2 id="clickCount" class="score-text">0</h2>
-          <h3 id="autoCountDisplay" class="sub-text">0/сек</h3>
+      <main class="clicker-zone" id="clicker-zone">
+        <div class="click-target-wrapper">
+          <img src="./img/mamac sofia.jpg" alt="Click Me" class="click-target" id="main-target">
         </div>
-
-        <div class="image-wrapper" id="imageWrapper">
-          <img class="main-image" src="./img/mamac sofia.jpg" alt="Target" id="clickableImage" />
-        </div>
-
-        <button id="skillBoostBtn" class="skill-btn">⚡ ПЕРЕГРУЗКА (Готово)</button>
       </main>
 
-      <aside class="panel">
-        <h3 class="panel-title">ДОСТИЖЕНИЯ</h3>
-        <div class="achievements-list" id="achievementsList">
-          <div class="achiev-item" id="ach1">Новичок (100 кликов)</div>
-          <div class="achiev-item" id="ach2">Маньяк (1,000 кликов)</div>
-          <div class="achiev-item" id="ach3">Богач (10,000 монет)</div>
-        </div>
-
-        <h3 class="panel-title" style="margin-top: 20px;">НАВИГАЦИЯ</h3>
-        <div class="nav-links">
-          <a href="img/crypto.html" class="nav-btn">📊 Свино-Биржа</a>
-          <a target="_blank" href="./magazine/magazine.html" class="nav-btn outline">📦 Магазин кейсов</a>
-        </div>
+      <aside class="nav-panel">
+        <h2>СЕТЬ</h2>
+        <a href="img/crypto.html" class="nav-link">📈 Свино-Биржа (Хак)</a>
+        <a target="_blank" href="./magazine/magazine.html" class="nav-link">📦 Магазин</a>
       </aside>
     </div>
-
-    <div id="inventory-icon"></div>
-    <div class="panel" id="inventory-panel">
-      <h3 class="panel-title">ИНВЕНТАРЬ</h3>
-      <div id="inventory-items" class="inv-grid"></div>
-    </div>
-
-    <script src="index.js"></script>
-  </body>
+  </div>
+  <script src="index.js"></script>
+</body>
 </html>

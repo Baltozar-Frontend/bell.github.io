@@ -12,50 +12,60 @@
     <header class="header">
       <div class="user-profile">
         <input type="text" id="userName" class="name-input" placeholder="Введи имя...">
-        <div class="level-badge" id="levelDisplay">LVL 1</div>
       </div>
-      <div class="balance-display">
-        <span id="clickCount">0</span> 💎
+      
+      <div class="header-card">
+        <div class="level-info">
+          <div class="level-badge" id="levelDisplay">LVL 1</div>
+          <div class="exp-track">
+            <div class="exp-bar" id="expFill"></div>
+          </div>
+        </div>
+        <div class="balance-display">
+          <span id="clickCount">0</span> 💎
+        </div>
       </div>
     </header>
 
     <div class="main-content">
-      <aside class="shop-panel">
+      <aside class="shop-panel panel">
         <h2>АПГРЕЙДЫ</h2>
         <div class="upgrade-list">
-          <button class="upg-btn" id="btn-power">
+          
+          <button class="upgrade-item" id="btn-power">
             <div class="upg-info">
-              <span class="upg-title">Сила клика</span>
+              <span class="upg-name">Сила клика</span>
               <span class="upg-desc" id="power-desc">+1 за клик</span>
             </div>
-            <span class="upg-cost" id="cost-power">100 💎</span>
+            <span class="upg-meta"><b id="cost-power">100</b> 💎</span>
           </button>
 
-          <button class="upg-btn" id="btn-auto">
+          <button class="upgrade-item" id="btn-auto">
             <div class="upg-info">
-              <span class="upg-title">Автокликер</span>
+              <span class="upg-name">Автокликер</span>
               <span class="upg-desc" id="auto-desc">0/сек</span>
             </div>
-            <span class="upg-cost" id="cost-auto">500 💎</span>
+            <span class="upg-meta"><b id="cost-auto">500</b> 💎</span>
           </button>
 
-          <button class="upg-btn legend-btn" id="btn-glolves" style="display: none;">
+          <button class="upgrade-item" id="btn-gloves" style="display: none;">
             <div class="upg-info">
-              <span class="upg-title">Glolves.glb</span>
+              <span class="upg-name">Gloves.glb</span>
               <span class="upg-desc">Множитель силы x10</span>
             </div>
-            <span class="upg-cost">100,000 💎</span>
+            <span class="upg-meta"><b>100000</b> 💎</span>
           </button>
+          
         </div>
       </aside>
 
-      <main class="clicker-zone" id="clicker-zone">
-        <div class="click-target-wrapper">
-          <img src="./img/mamac sofia.jpg" alt="Click Me" class="click-target" id="main-target">
+      <main class="game-core" id="clicker-zone">
+        <div class="main-image-container">
+          <img src="./img/mamac sofia.jpg" alt="Click Me" class="main-image" id="main-target">
         </div>
       </main>
 
-      <aside class="nav-panel">
+      <aside class="nav-panel panel">
         <h2>СЕТЬ</h2>
         <a href="img/crypto.html" class="nav-link">📈 Свино-Биржа (Хак)</a>
         <a target="_blank" href="./magazine/magazine.html" class="nav-link">📦 Магазин</a>

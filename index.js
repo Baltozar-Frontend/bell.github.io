@@ -12,17 +12,24 @@ let state = JSON.parse(localStorage.getItem(CONFIG.SAVE_KEY)) || {
     level: 1,
     exp: 0,
     prestige: 1,
-    upgrades: { p1: 100, a1: 500, c1: 1000 },
+    upgrades: { p1: 100, a1: 500 },
     lastTime: Date.now()
 };
 
-// Элементы
+// Привязка UI элементов (Исправлены ID!)
 const ui = {
     coins: document.getElementById('clickCount'),
-    img: document.getElementById('clickableImage'),
+    img: document.getElementById('main-target'),
     expBar: document.getElementById('expFill'),
     lvl: document.getElementById('levelDisplay'),
-    auto: document.getElementById('autoCountDisplay')
+    
+    // Магазин
+    btnPower: document.getElementById('btn-power'),
+    btnAuto: document.getElementById('btn-auto'),
+    powerDesc: document.getElementById('power-desc'),
+    autoDesc: document.getElementById('auto-desc'),
+    costPower: document.getElementById('cost-power'),
+    costAuto: document.getElementById('cost-auto')
 };
 
 // Функция сохранения
@@ -41,21 +48,24 @@ function spawnParticle(x, y, value, isCrit) {
     const p = document.createElement('div');
     p.className = 'click-particle';
     if (isCrit) {
-        p.style.color = '#ff3b30';
+        p.style.color = 'var(--crit)';
         p.style.fontSize = '3.5rem';
         p.innerText = `🔥 ${value}`;
     } else {
         p.innerText = `+${value}`;
     }
-    p.style.left = x + 'px';
-    p.style.top = y + 'px';
+    // Рандомный разброс по оси X для красоты
+    const offsetX = (Math.random() - 0.5) * 40;
+    p.style.left = (x - 20 + offsetX) + 'px';
+    p.style.top = (y - 40) + 'px';
     document.body.appendChild(p);
+    
     setTimeout(() => p.remove(), 800);
 }
 
-// Клик
+// Клик по объекту
 ui.img.addEventListener('mousedown', (e) => {
-    let isCrit = Math.random() < 0.05; // 5% шанс крита по умолчанию
+    let isCrit = Math.random() < 0.05; // 5% шанс крита
     let val = state.power * state.prestige * (isCrit ? 3 : 1);
     
     state.coins += val;
@@ -77,16 +87,21 @@ ui.img.addEventListener('mousedown', (e) => {
 // Обновление интерфейса
 function updateUI() {
     ui.coins.innerText = Math.floor(state.coins).toLocaleString();
-    ui.lvl.innerText = `УРОВЕНЬ ${state.level}`;
-    ui.auto.innerText = `${state.auto}/сек`;
-    ui.expBar.style.width = (state.exp / (state.level * 150)) * 100 + '%';
+    ui.lvl.innerText = `LVL ${state.level}`;
     
-    // Обновление цен в кнопках
-    document.getElementById('priceDisplay').innerText = state.upgrades.p1 + ' C';
-    document.getElementById('autoPriceDisplay').innerText = state.upgrades.a1 + ' C';
+    // Безопасная проверка, если уровень слишком большой
+    let expPercent = (state.exp / (state.level * 150)) * 100;
+    ui.expBar.style.width = Math.min(expPercent, 100) + '%';
+    
+    // Обновление текстов в магазине
+    ui.powerDesc.innerText = `+${state.power} за клик`;
+    ui.autoDesc.innerText = `${state.auto}/сек`;
+    
+    ui.costPower.innerText = state.upgrades.p1.toLocaleString();
+    ui.costAuto.innerText = state.upgrades.a1.toLocaleString();
 }
 
-// Автокликер (1 раз в секунду)
+// Автокликер (срабатывает каждые 1000мс)
 setInterval(() => {
     if (state.auto > 0) {
         state.coins += (state.auto * state.prestige);
@@ -95,29 +110,31 @@ setInterval(() => {
     }
 }, 1000);
 
-// Покупка улучшений (Пример)
-document.getElementById('plus1Click').onclick = () => {
+// Логика покупок
+ui.btnPower.addEventListener('click', () => {
     if (state.coins >= state.upgrades.p1) {
         state.coins -= state.upgrades.p1;
         state.power += 1;
         state.upgrades.p1 = Math.floor(state.upgrades.p1 * 1.5);
-        updateUI(); save();
+        updateUI(); 
+        save();
     }
-};
+});
 
-document.getElementById('autoClickUpgrade').onclick = () => {
+ui.btnAuto.addEventListener('click', () => {
     if (state.coins >= state.upgrades.a1) {
         state.coins -= state.upgrades.a1;
         state.auto += 1;
         state.upgrades.a1 = Math.floor(state.upgrades.a1 * 1.6);
-        updateUI(); save();
+        updateUI(); 
+        save();
     }
-};
+});
 
-// Инициализация
+// Инициализация при старте
 updateUI();
 
 // PWA Регистрация
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js');
+    navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW setup failed:', err));
 }

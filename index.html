@@ -2,36 +2,174 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>София | Perfect Clicker</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="manifest" href="manifest.json">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Perfect Clicker</title>
+  
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --panel: #161617;
+      --panel-light: #242426;
+      --accent: #ff8c00;
+      --pass-accent: #b534ff; 
+      --exchange-accent: #00d2ff;
+      --case-accent: #ffb800;
+      --text: #e1e1e6;
+      --text-dim: #82828a;
+      --border: #2d2d30;
+      --up: #4cd137;
+      --down: #ff3b30;
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      background-color: var(--bg); color: var(--text);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0; padding: 20px; overflow-x: hidden;
+    }
+
+    .app-container { max-width: 1400px; margin: 0 auto; }
+
+    .main-content {
+      display: grid; grid-template-columns: 300px 1fr 300px; gap: 20px; align-items: start;
+    }
+
+    .panel {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 16px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    /* Шапка */
+    .header-card {
+      display: flex; justify-content: space-between; align-items: center;
+      background: var(--panel); padding: 20px 30px;
+      border-radius: 16px; border: 1px solid var(--border); margin-bottom: 20px;
+    }
+    .level-info { flex-grow: 1; margin-right: 40px; }
+    .level-badge { font-weight: bold; color: var(--accent); font-size: 1.2rem; }
+    .exp-track {
+      height: 10px; background: #000; border-radius: 5px; margin-top: 10px; border: 1px solid var(--border); overflow: hidden;
+    }
+    .exp-bar {
+      height: 100%; background: linear-gradient(90deg, var(--accent), #ff3b30); width: 0%; transition: width 0.3s;
+    }
+    .balance-display { font-size: 2rem; font-weight: bold; color: #fff; }
+
+    /* Зона клика */
+    .game-core {
+      display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 500px; position: relative;
+    }
+    .main-image {
+      width: 250px; height: 250px; border-radius: 50%; object-fit: cover;
+      border: 5px solid var(--accent); box-shadow: 0 0 40px rgba(255, 140, 0, 0.3);
+      cursor: pointer; transition: transform 0.05s;
+    }
+    .main-image:active { transform: scale(0.95); }
+
+    .click-particle {
+      position: absolute; pointer-events: none; font-weight: 900;
+      font-size: 2rem; color: #fff; animation: particleFloat 0.8s ease-out forwards; z-index: 100; text-shadow: 0 2px 5px rgba(0,0,0,0.8);
+    }
+    @keyframes particleFloat {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
+    }
+
+    /* Магазин и меню */
+    .upgrade-list { display: flex; flex-direction: column; gap: 10px; }
+    .upgrade-item {
+      background: var(--panel-light); border: 1px solid var(--border);
+      padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;
+      cursor: pointer; color: var(--text); transition: 0.2s; text-align: left; width: 100%;
+    }
+    .upgrade-item:hover { border-color: var(--accent); }
+    .upgrade-item:active { transform: scale(0.95); }
+    .upg-meta b { color: var(--accent); font-size: 1.1rem; }
+    .upg-name { display: block; font-weight: bold; }
+    .upg-desc { font-size: 0.8rem; color: var(--text-dim); }
+
+    .nav-btn {
+      width: 100%; padding: 15px; margin-top: 10px; background: var(--panel-light); border: 1px solid var(--border);
+      color: var(--text); border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s;
+    }
+    .nav-btn:hover { background: #2d2d30; }
+    
+    .pass-btn { background: linear-gradient(45deg, #7400b8, #b534ff); border: none; box-shadow: 0 0 15px rgba(181, 52, 255, 0.4); }
+    .exchange-btn { background: linear-gradient(45deg, #0052d4, #4364f7); border: none; box-shadow: 0 0 15px rgba(67, 100, 247, 0.4); }
+    .case-btn { background: linear-gradient(45deg, #f12711, #f5af19); border: none; box-shadow: 0 0 15px rgba(245, 175, 25, 0.4); }
+
+    .danger-btn { margin-top: 50px; background: transparent; border: 1px solid var(--down); color: var(--down); padding: 10px 20px; border-radius: 8px; cursor: pointer; }
+
+    /* === МОДАЛЬНЫЕ ОКНА === */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8);
+      display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(5px);
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-content {
+      background: var(--panel); border: 2px solid var(--border); border-radius: 20px;
+      width: 90%; max-width: 900px; max-height: 85vh; padding: 25px; position: relative; overflow-y: auto;
+    }
+    .close-btn { position: absolute; top: 15px; right: 20px; background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
+
+    /* Свино-Биржа */
+    .exchange-header { text-align: center; color: var(--exchange-accent); font-size: 2rem; margin-top: 0;}
+    .chart-box { background: var(--panel-light); border-radius: 12px; padding: 30px; text-align: center; margin-bottom: 20px;}
+    .crypto-price { font-size: 3rem; font-weight: bold; transition: color 0.3s; }
+    .crypto-price.up { color: var(--up); }
+    .crypto-price.down { color: var(--down); }
+    .crypto-portfolio { display: flex; justify-content: space-around; background: var(--bg); padding: 15px; border-radius: 12px; margin-bottom: 20px; font-size: 1.2rem;}
+    .trade-actions { display: flex; gap: 15px; }
+    .trade-btn { flex: 1; padding: 15px; border: none; border-radius: 8px; font-weight: bold; font-size: 1.2rem; cursor: pointer;}
+    .btn-buy { background: var(--up); color: #000; }
+    .btn-sell { background: var(--down); color: #fff; }
+
+    /* Кейсы */
+    .case-container { text-align: center; }
+    .case-box { 
+      background: linear-gradient(135deg, #2c3e50, #3498db); padding: 50px; border-radius: 20px;
+      margin: 20px auto; width: 300px; box-shadow: 0 0 30px rgba(52, 152, 219, 0.5); border: 3px solid #fff;
+    }
+    .open-case-btn { background: var(--case-accent); color: #000; border: none; padding: 15px 30px; font-size: 1.5rem; font-weight: bold; border-radius: 12px; cursor: pointer; transition: 0.2s;}
+    .open-case-btn:hover { transform: scale(1.05); }
+    .drop-result { margin-top: 20px; font-size: 1.5rem; font-weight: bold; min-height: 50px;}
+
+    /* === СЕКРЕТНАЯ КНОПКА === */
+    #secret-cheat-btn {
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      width: 50px;
+      height: 50px;
+      opacity: 0; /* Полностью невидимая */
+      cursor: pointer;
+      z-index: 9999;
+    }
+
+    @media (max-width: 900px) {
+      .main-content { grid-template-columns: 1fr; }
+      .header-card { flex-direction: column; text-align: center; gap: 15px; }
+      .trade-actions { flex-direction: column; }
+    }
+  </style>
 </head>
 <body>
+  
   <div class="app-container">
-    <header class="header">
-      <div class="user-profile">
-        <input type="text" id="userName" class="name-input" placeholder="Введи имя...">
+    <header class="header-card">
+      <div class="level-info">
+        <div class="level-badge" id="levelDisplay">УРОВЕНЬ 1</div>
+        <div class="exp-track"><div class="exp-bar" id="expFill"></div></div>
       </div>
-      
-      <div class="header-card">
-        <div class="level-info">
-          <div class="level-badge" id="levelDisplay">LVL 1</div>
-          <div class="exp-track">
-            <div class="exp-bar" id="expFill"></div>
-          </div>
-        </div>
-        <div class="balance-display">
-          <span id="clickCount">0</span> 💎
-        </div>
-      </div>
+      <div class="balance-display"><span id="clickCount">0</span> 💎</div>
     </header>
 
     <div class="main-content">
-      <aside class="shop-panel panel">
+      
+      <aside class="panel shop-panel">
         <h2>АПГРЕЙДЫ</h2>
         <div class="upgrade-list">
-          
           <button class="upgrade-item" id="btn-power">
             <div class="upg-info">
               <span class="upg-name">Сила клика</span>
@@ -42,36 +180,289 @@
 
           <button class="upgrade-item" id="btn-auto">
             <div class="upg-info">
-              <span class="upg-name">Автокликер</span>
+              <span class="upg-name">Работяга</span>
               <span class="upg-desc" id="auto-desc">0/сек</span>
             </div>
             <span class="upg-meta"><b id="cost-auto">500</b> 💎</span>
           </button>
 
-          <button class="upgrade-item" id="btn-gloves" style="display: none;">
+          <button class="upgrade-item" id="btn-marketing">
             <div class="upg-info">
-              <span class="upg-name">Gloves.glb</span>
-              <span class="upg-desc">Множитель силы x10</span>
+              <span class="upg-name">Отдел маркетинга</span>
+              <span class="upg-desc" id="marketing-desc">0/сек</span>
             </div>
-            <span class="upg-meta"><b>100000</b> 💎</span>
+            <span class="upg-meta"><b id="cost-marketing">5,000</b> 💎</span>
           </button>
-          
         </div>
       </aside>
 
-      <main class="game-core" id="clicker-zone">
+      <main class="panel game-core">
         <div class="main-image-container">
-          <img src="./img/mamac sofia.jpg" alt="Click Me" class="main-image" id="main-target">
+          <img src="img/mamac sofia.jpg" alt="Click Me" class="main-image" id="main-target">
+        </div>
+        <div class="reset-zone">
+          <button id="btn-reset" class="danger-btn">Сбросить прогресс</button>
         </div>
       </main>
 
-      <aside class="nav-panel panel">
-        <h2>СЕТЬ</h2>
-        <a href="img/crypto.html" class="nav-link">📈 Свино-Биржа (Хак)</a>
-        <a target="_blank" href="./magazine/magazine.html" class="nav-link">📦 Магазин</a>
+      <aside class="panel nav-panel">
+        <h2>МЕНЮ</h2>
+        <button class="nav-btn pass-btn" id="btn-pass">🏆 София Пасс</button>
+        <button class="nav-btn exchange-btn" id="btn-exchange">📈 Свино-Биржа</button>
+        <button class="nav-btn case-btn" id="btn-cases">📦 Открыть Кейс</button>
       </aside>
     </div>
   </div>
-  <script src="index.js"></script>
+
+  <!-- Окна меню -->
+  <div class="modal-overlay" id="pass-modal">
+    <div class="modal-content" style="border-color: var(--pass-accent);">
+      <button class="close-btn" onclick="closeModal('pass-modal')">✖</button>
+      <h2 style="text-align:center; color: var(--pass-accent);">СОФИЯ ПАСС</h2>
+      <p style="text-align:center;">У тебя: <b id="pass-tokens">0</b> 🎫 (Пасс в разработке, копи жетоны!)</p>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="exchange-modal">
+    <div class="modal-content" style="border-color: var(--exchange-accent);">
+      <button class="close-btn" onclick="closeModal('exchange-modal')">✖</button>
+      <h2 class="exchange-header">Свино-Биржа (SVC)</h2>
+      <div class="crypto-portfolio">
+        <div>Твой баланс: <b id="ex-balance" style="color:var(--accent);">0</b> 💎</div>
+        <div>В портфеле: <b id="ex-coins">0</b> SVC</div>
+      </div>
+      <div class="chart-box">
+        <div>Текущий курс Svin-Coin:</div>
+        <div class="crypto-price" id="crypto-price">100 💎</div>
+      </div>
+      <div class="trade-actions">
+        <button class="trade-btn btn-buy" id="trade-buy">Купить 1 SVC</button>
+        <button class="trade-btn btn-sell" id="trade-sell">Продать 1 SVC</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="case-modal">
+    <div class="modal-content" style="border-color: var(--case-accent);">
+      <button class="close-btn" onclick="closeModal('case-modal')">✖</button>
+      <h2 style="text-align:center; color: var(--case-accent); margin-top:0;">ЛУТБОКСЫ</h2>
+      <div class="case-container">
+        <div class="case-box">
+          <h3 style="margin:0;">СЕКРЕТНЫЙ КЕЙС</h3>
+          <p>Цена: 5,000 💎</p>
+        </div>
+        <button class="open-case-btn" id="open-case-btn">ОТКРЫТЬ (5,000 💎)</button>
+        <div class="drop-result" id="drop-result"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- НЕВИДИМАЯ СЕКРЕТНАЯ КНОПКА (Справа внизу) -->
+  <div id="secret-cheat-btn"></div>
+
+  <script>
+    // ИНИЦИАЛИЗАЦИЯ
+    let gameData = JSON.parse(localStorage.getItem('megaClickerSave')) || {
+        coins: 0, power: 1, auto: 0, marketing: 0, level: 1, exp: 0,
+        costPower: 100, costAuto: 500, costMarketing: 5000,
+        crypto: { amount: 0, currentPrice: 100 }
+    };
+
+    if (gameData.marketing === undefined) gameData.marketing = 0;
+    if (gameData.costMarketing === undefined) gameData.costMarketing = 5000;
+    if (!gameData.crypto) gameData.crypto = { amount: 0, currentPrice: 100 };
+
+    const ui = {
+        coins: document.getElementById('clickCount'),
+        lvl: document.getElementById('levelDisplay'),
+        expBar: document.getElementById('expFill'),
+        target: document.getElementById('main-target'),
+        costPower: document.getElementById('cost-power'),
+        costAuto: document.getElementById('cost-auto'),
+        costMarketing: document.getElementById('cost-marketing'),
+        descPower: document.getElementById('power-desc'),
+        descAuto: document.getElementById('auto-desc'),
+        descMarketing: document.getElementById('marketing-desc'),
+        btnPower: document.getElementById('btn-power'),
+        btnAuto: document.getElementById('btn-auto'),
+        btnMarketing: document.getElementById('btn-marketing'),
+        exBalance: document.getElementById('ex-balance'),
+        exCoins: document.getElementById('ex-coins'),
+        cryptoPrice: document.getElementById('crypto-price'),
+        dropResult: document.getElementById('drop-result')
+    };
+
+    function saveGame() { localStorage.setItem('megaClickerSave', JSON.stringify(gameData)); }
+    setInterval(saveGame, 2000);
+
+    function openModal(id) { document.getElementById(id).classList.add('active'); updateUI(); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+    
+    document.getElementById('btn-pass').addEventListener('click', () => openModal('pass-modal'));
+    document.getElementById('btn-exchange').addEventListener('click', () => openModal('exchange-modal'));
+    document.getElementById('btn-cases').addEventListener('click', () => openModal('case-modal'));
+
+    function spawnParticle(x, y, value, isCrit) {
+        const p = document.createElement('div');
+        p.className = 'click-particle';
+        if (isCrit) {
+            p.style.color = '#ff3b30'; p.innerHTML = `🔥 ${value}`; p.style.fontSize = '3rem';
+        } else { p.innerHTML = `+${value}`; }
+        p.style.left = (x - 20 + (Math.random() - 0.5) * 60) + 'px';
+        p.style.top = (y - 50) + 'px';
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 800);
+    }
+
+    // Ручной клик
+    function doClick(x, y, spawnParticles = true) {
+        let isCrit = Math.random() < 0.10;
+        let earned = gameData.power * (isCrit ? 3 : 1);
+        gameData.coins += earned;
+        gameData.exp += 1;
+        
+        if (gameData.exp >= gameData.level * 50) {
+            gameData.level++; gameData.exp = 0;
+            if (spawnParticles) spawnParticle(x, y - 50, 'LEVEL UP!', true);
+        }
+
+        if (spawnParticles) spawnParticle(x, y, earned, isCrit);
+        updateUI();
+    }
+
+    ui.target.addEventListener('mousedown', (e) => {
+        doClick(e.pageX, e.pageY, true);
+    });
+
+    // Пассивный доход
+    setInterval(() => {
+        let passiveIncome = gameData.auto + (gameData.marketing * 10);
+        if (passiveIncome > 0) { gameData.coins += passiveIncome; updateUI(); }
+    }, 1000);
+
+    // === СЕКРЕТНЫЙ РЕЖИМ (ЧИТ) ===
+    let cheatActive = false;
+    let cheatInterval;
+    
+    document.getElementById('secret-cheat-btn').addEventListener('click', () => {
+        cheatActive = !cheatActive;
+        if (cheatActive) {
+            alert('🔓 АКТИВИРОВАН РЕЖИМ РАЗРАБОТЧИКА! (50 кликов в секунду)');
+            // Запускаем цикл: срабатывает каждые 20 мс (50 раз в секунду)
+            cheatInterval = setInterval(() => {
+                // Вызываем клик, но частицы спавним редко (чтобы комп не завис от перегрузки)
+                let rect = ui.target.getBoundingClientRect();
+                let x = rect.left + rect.width / 2;
+                let y = rect.top + rect.height / 2;
+                let shouldSpawnParticle = Math.random() < 0.05; // Только 5% кликов покажут цифру на экране
+                
+                doClick(x, y, shouldSpawnParticle);
+            }, 20);
+        } else {
+            alert('🔒 СЕКРЕТНЫЙ РЕЖИМ ВЫКЛЮЧЕН.');
+            clearInterval(cheatInterval);
+        }
+    });
+
+    // Магазин
+    function buyUpgrade(type) {
+        if (type === 'power' && gameData.coins >= gameData.costPower) {
+            gameData.coins -= gameData.costPower; gameData.power++;
+            gameData.costPower = Math.floor(gameData.costPower * 1.5);
+        } else if (type === 'auto' && gameData.coins >= gameData.costAuto) {
+            gameData.coins -= gameData.costAuto; gameData.auto += 2;
+            gameData.costAuto = Math.floor(gameData.costAuto * 1.6);
+        } else if (type === 'marketing' && gameData.coins >= gameData.costMarketing) {
+            gameData.coins -= gameData.costMarketing; gameData.marketing += 5;
+            gameData.costMarketing = Math.floor(gameData.costMarketing * 1.8);
+        }
+        updateUI(); saveGame();
+    }
+    ui.btnPower.addEventListener('click', () => buyUpgrade('power'));
+    ui.btnAuto.addEventListener('click', () => buyUpgrade('auto'));
+    ui.btnMarketing.addEventListener('click', () => buyUpgrade('marketing'));
+
+    document.getElementById('btn-reset').addEventListener('click', () => {
+        if (confirm('Весь прогресс удалится навсегда!')) {
+            localStorage.removeItem('megaClickerSave'); location.reload();
+        }
+    });
+
+    // Биржа
+    setInterval(() => {
+        let change = (Math.random() - 0.5) * 40;
+        let oldPrice = gameData.crypto.currentPrice;
+        gameData.crypto.currentPrice = Math.max(10, Math.floor(oldPrice + change)); 
+        ui.cryptoPrice.innerText = `${gameData.crypto.currentPrice} 💎`;
+        ui.cryptoPrice.className = gameData.crypto.currentPrice > oldPrice ? 'crypto-price up' : 'crypto-price down';
+    }, 4000);
+
+    document.getElementById('trade-buy').addEventListener('click', () => {
+        if (gameData.coins >= gameData.crypto.currentPrice) {
+            gameData.coins -= gameData.crypto.currentPrice; gameData.crypto.amount++; updateUI();
+        }
+    });
+
+    document.getElementById('trade-sell').addEventListener('click', () => {
+        if (gameData.crypto.amount > 0) {
+            gameData.crypto.amount--; gameData.coins += gameData.crypto.currentPrice; updateUI();
+        }
+    });
+
+    // Кейсы
+    const caseDrops = [
+        { name: "Обычный Лунтик", chance: 60, type: "coins", value: 2000, color: "#fff" },
+        { name: "Баба Капа (Редкая)", chance: 30, type: "power", value: 10, color: "#3498db" },
+        { name: "Дядя Шер (ЭПИК!)", chance: 9, type: "auto", value: 50, color: "#9b59b6" },
+        { name: "Gloves.glb (ЛЕГЕНДАРКА!)", chance: 1, type: "power", value: 100, color: "#f1c40f" }
+    ];
+
+    document.getElementById('open-case-btn').addEventListener('click', () => {
+        if (gameData.coins >= 5000) {
+            gameData.coins -= 5000;
+            ui.dropResult.innerHTML = "<i>Открываем... 🎲</i>";
+            ui.dropResult.style.color = "#fff";
+            updateUI();
+
+            setTimeout(() => {
+                let roll = Math.random() * 100;
+                let currentChance = 0; let droppedItem = caseDrops[0];
+
+                for (let item of caseDrops) {
+                    currentChance += item.chance;
+                    if (roll <= currentChance) { droppedItem = item; break; }
+                }
+
+                if (droppedItem.type === "coins") gameData.coins += droppedItem.value;
+                if (droppedItem.type === "power") gameData.power += droppedItem.value;
+                if (droppedItem.type === "auto") gameData.auto += droppedItem.value;
+
+                ui.dropResult.innerHTML = `Вам выпал: <span style="color:${droppedItem.color}">${droppedItem.name}</span>!<br>Бонус: +${droppedItem.value}`;
+                updateUI(); saveGame();
+            }, 1000);
+        } else {
+            ui.dropResult.innerHTML = "<span style='color:red;'>Не хватает алмазов!</span>";
+        }
+    });
+
+    function updateUI() {
+        ui.coins.innerText = Math.floor(gameData.coins).toLocaleString();
+        ui.lvl.innerText = `УРОВЕНЬ ${gameData.level}`;
+        ui.expBar.style.width = Math.min((gameData.exp / (gameData.level * 50)) * 100, 100) + '%';
+        
+        ui.costPower.innerText = gameData.costPower.toLocaleString();
+        ui.costAuto.innerText = gameData.costAuto.toLocaleString();
+        ui.costMarketing.innerText = gameData.costMarketing.toLocaleString();
+        
+        ui.descPower.innerText = `+${gameData.power} за клик`;
+        ui.descAuto.innerText = `${gameData.auto} в сек`;
+        ui.descMarketing.innerText = `${gameData.marketing * 10} в сек`;
+
+        ui.exBalance.innerText = Math.floor(gameData.coins).toLocaleString();
+        ui.exCoins.innerText = gameData.crypto.amount;
+    }
+
+    updateUI();
+  </script>
 </body>
 </html>
